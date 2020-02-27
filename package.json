@@ -1,0 +1,25 @@
+{
+  "name": "border",
+  "version": "1.0.0",
+  "description": "2bit 9patch editor",
+  "main": "index.js",
+  "dependencies": {
+    "parcel": "^1.12.4"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.2"
+  },
+  "scripts": {
+    "start": "parcel develop index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxBittker/border.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaxBittker/border/issues"
+  },
+  "homepage": "https://github.com/MaxBittker/border#readme"
+}

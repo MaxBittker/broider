@@ -1,0 +1,18 @@
+canvas {
+  border: 8px gainsboro solid;
+  margin: 0;
+  width: 400px;
+  height: 400px;
+  padding: 0;
+  image-rendering: pixelated;
+}
+
+body {
+  background-color: antiquewhite;
+}
+
+#target {
+  border-image-repeat: repeat;
+  margin: 50px;
+  height: 200px;
+}
