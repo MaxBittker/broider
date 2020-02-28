@@ -10,7 +10,8 @@
     "typescript": "^3.8.2"
   },
   "scripts": {
-    "start": "parcel develop index.html"
+    "start": "parcel develop index.html",
+    "build": "parcel build index.html  -d docs --public-url /borders/"
   },
   "repository": {
     "type": "git",
