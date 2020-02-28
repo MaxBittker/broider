@@ -24,7 +24,7 @@ function newGrid() {
 }
 
 let map = newGrid();
-console.log(map);
+// console.log(map);
 
 function randomInt(amin, amax?: number) {
   var min = amin;
@@ -41,10 +41,10 @@ function randomInt(amin, amax?: number) {
 function randomLoc() {
   return [randomInt(3), randomInt(3), randomInt(tileSize), randomInt(tileSize)];
 }
-function setLoc(loc, v) {
+function setLoc(loc, v = 1) {
   let address = loc.slice(0, -1);
   let lastPos = loc[loc.length - 1];
-  console.log(v);
+  //   console.log(v);
   address.reduce((acc, i) => acc[i], map)[lastPos] = v;
 }
 function getLoc(loc) {
@@ -65,8 +65,7 @@ setLoc(randomLoc());
 setLoc(randomLoc());
 
 function renderMap(map) {
-
-    renderCtx.fill()
+  renderCtx.fill();
   for (let sx = 0; sx < 3; sx++) {
     for (let sy = 0; sy < 3; sy++) {
       for (let cx = 0; cx < tileSize; cx++) {
@@ -99,15 +98,15 @@ for (let index = 0; index < 3; index++) {
 
 for (let index = 0; index < 3 * tileSize; index++) {
   ctx.strokeStyle = "#ccc";
-    let x = ((index * canvas.width) / (3 * tileSize);
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvas.height);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, x);
-    ctx.lineTo(canvas.height, x);
-    ctx.stroke();
+  let x = (index * canvas.width) / (3 * tileSize);
+  ctx.beginPath();
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x, canvas.height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, x);
+  ctx.lineTo(canvas.height, x);
+  ctx.stroke();
 }
 renderMap(map);
 setBorder();
@@ -122,14 +121,13 @@ function setBorder() {
   target.style.borderWidth = `${tileSize * pixelRatio}px`;
   target.style.borderStyle = "solid";
 }
-let draw = (e, isClick) => {
+let draw = (e, isClick = false) => {
   if (!isDown) {
     return;
   }
   let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
-
   let canvasX = (x / width) * canvas.width;
   let canvasY = (y / height) * canvas.height;
   let gridX = Math.floor(canvasX / pixelRatio);
@@ -139,13 +137,12 @@ let draw = (e, isClick) => {
   let sy = Math.floor(gridY / tileSize);
   let cx = gridX % tileSize;
   let cy = gridY % tileSize;
-  let loc =[sx, sy, cx, cy];
-  let v = getLoc(loc)||0; 
-  console.log(v);
-  if(!isClick){
+  let loc = [sx, sy, cx, cy];
+  let v = getLoc(loc) || 0;
+  if (!isClick) {
     v = 0;
   }
-  setLoc(loc, 1-v);
+  setLoc(loc, 1 - v);
   //   ctx.fillStyle = "#000";
   //   ctx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
   renderMap(map);
@@ -162,4 +159,28 @@ canvas.addEventListener("mouseup", () => {
 });
 canvas.addEventListener("mouseleave", () => {
   isDown = false;
+});
+
+canvas.addEventListener("touchstart", e => {
+  isDown = true;
+
+  e.preventDefault();
+
+  const touches = e.targetTouches;
+  for (let i = 0; i < touches.length; i++) {
+    e["clientX"] = touches[i].clientX;
+    e["clientY"] = touches[i].clientY;
+    draw(e);
+  }
+});
+canvas.addEventListener("touchmove", e => {
+  e.preventDefault();
+  isDown = true;
+
+  const touches = e.targetTouches;
+  for (let i = 0; i < touches.length; i++) {
+    e["clientX"] = touches[i].clientX;
+    e["clientY"] = touches[i].clientY;
+    draw(e);
+  }
 });
