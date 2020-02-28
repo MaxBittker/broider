@@ -2,13 +2,19 @@ var tileSize = 4;
 var pixelRatio = 4;
 
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
+let guideCanvas = <HTMLCanvasElement>document.getElementById("guide");
 let renderCanvas = <HTMLCanvasElement>document.getElementById("render");
 canvas.width = tileSize * pixelRatio * 3;
 canvas.height = tileSize * pixelRatio * 3;
+guideCanvas.width = tileSize * pixelRatio * 3;
+guideCanvas.height = tileSize * pixelRatio * 3;
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
+
 var ctx = canvas.getContext("2d");
+var guideCtx = guideCanvas.getContext("2d");
 var renderCtx = renderCanvas.getContext("2d");
+
 var isDown = false;
 
 function newCell() {
@@ -75,7 +81,9 @@ function renderMap(map) {
           renderCtx.fillStyle = v == 1 ? "#000" : "#fff0";
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
-          ctx.fillRect(gridX + 1, gridY + 1, pixelRatio - 1, pixelRatio - 1);
+          ctx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
+          renderCtx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
+          ctx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
           renderCtx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
         }
       }
@@ -83,30 +91,30 @@ function renderMap(map) {
   }
 }
 for (let index = 0; index < 3; index++) {
-  ctx.strokeStyle = "#999";
-  ctx.lineWidth = 0.5;
+  guideCtx.strokeStyle = "#999";
+  guideCtx.lineWidth = 0.5;
   let x = (index * canvas.width) / 3;
-  ctx.beginPath();
-  ctx.moveTo(x, 0);
-  ctx.lineTo(x, canvas.height);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(0, x);
-  ctx.lineTo(canvas.height, x);
-  ctx.stroke();
+  guideCtx.beginPath();
+  guideCtx.moveTo(x, 0);
+  guideCtx.lineTo(x, canvas.height);
+  guideCtx.stroke();
+  guideCtx.beginPath();
+  guideCtx.moveTo(0, x);
+  guideCtx.lineTo(canvas.height, x);
+  guideCtx.stroke();
 }
 
 for (let index = 0; index < 3 * tileSize; index++) {
-  ctx.strokeStyle = "#ccc";
+  guideCtx.strokeStyle = "#ccc";
   let x = (index * canvas.width) / (3 * tileSize);
-  ctx.beginPath();
-  ctx.moveTo(x, 0);
-  ctx.lineTo(x, canvas.height);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(0, x);
-  ctx.lineTo(canvas.height, x);
-  ctx.stroke();
+  guideCtx.beginPath();
+  guideCtx.moveTo(x, 0);
+  guideCtx.lineTo(x, canvas.height);
+  guideCtx.stroke();
+  guideCtx.beginPath();
+  guideCtx.moveTo(0, x);
+  guideCtx.lineTo(canvas.height, x);
+  guideCtx.stroke();
 }
 renderMap(map);
 setBorder();
