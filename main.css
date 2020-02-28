@@ -15,4 +15,5 @@ body {
   border-image-repeat: repeat;
   margin: 50px;
   height: 200px;
+  background-color: transparent;
 }
