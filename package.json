@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "parcel develop index.html",
-    "build": "parcel build index.html  -d docs --public-url /borders/"
+    "build": "parcel build index.html  -d docs --public-url /border/"
   },
   "repository": {
     "type": "git",
