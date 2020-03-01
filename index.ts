@@ -79,6 +79,29 @@ function renderMap(map) {
           let gridY = (sy * tileSize + cy) * pixelRatio;
 
           if (sx == 1 && sy == 1) {
+            if (
+              cx == Math.floor(tileSize - 1) ||
+              cx == 0 ||
+              cy == Math.floor(tileSize - 1) ||
+              cy == 0
+            ) {
+              continue;
+            }
+            if (isErasing && cx > 1 && cx < 5 && cy > 1 && cy < 5) {
+              continue;
+            }
+            continue;
+            // if (!isErasing) {
+            ctx.fillStyle = 1 == 1 ? "#000" : "#fff0";
+            gridX *= editorRatio / pixelRatio;
+            gridY *= editorRatio / pixelRatio;
+            ctx.fillRect(
+              gridX + 1,
+              gridY + 1,
+              editorRatio - 1,
+              editorRatio - 1
+            );
+            // }
             continue;
           }
           renderCtx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
@@ -153,7 +176,7 @@ function setBorder() {
   style.sheet.insertRule(css);
   target.textContent = css;
 }
-let draw = (e, isClick = false) => {
+let draw = (e, isClick = false, isTouchStart = false) => {
   let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
@@ -222,17 +245,26 @@ canvas.addEventListener("touchstart", e => {
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
-    draw(e);
+    draw(e, true);
   }
 });
 canvas.addEventListener("touchmove", e => {
   e.preventDefault();
   isDown = true;
-
+  if (isErasing) {
+    return;
+  }
   const touches = e.targetTouches;
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
     draw(e);
   }
+  // isErasing = false;
+});
+
+canvas.addEventListener("touchend", e => {
+  e.preventDefault();
+  isDown = false;
+  isErasing = false;
 });
