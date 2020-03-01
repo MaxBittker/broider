@@ -45,6 +45,7 @@ body {
   overflow: hidden;
   justify-self: end;
   width: 80%;
+  max-width: 450px;
   /* height: 100%; */
 }
 textarea {
@@ -67,7 +68,7 @@ pre {
   margin-top: 8px;
 
   display: grid;
-  grid-template-columns: 33% auto 96px;
+  /* grid-template-columns: 33% auto 96px; */
   grid-template-rows: 160px 192px 160px;
   grid-column-gap: 8px;
   grid-row-gap: 8px;
