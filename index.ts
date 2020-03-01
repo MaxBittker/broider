@@ -1,15 +1,21 @@
-var tileSize = 4;
+var tileSize = 8;
 var pixelRatio = 4;
+var editorRatio = 4 * pixelRatio;
 
+let frame = <HTMLElement>document.getElementById("editor-frame");
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
 let guideCanvas = <HTMLCanvasElement>document.getElementById("guide");
 let renderCanvas = <HTMLCanvasElement>document.getElementById("render");
-canvas.width = tileSize * pixelRatio * 3;
-canvas.height = tileSize * pixelRatio * 3;
-guideCanvas.width = tileSize * pixelRatio * 3;
-guideCanvas.height = tileSize * pixelRatio * 3;
+canvas.width = tileSize * editorRatio * 3;
+canvas.height = tileSize * editorRatio * 3;
+guideCanvas.width = tileSize * editorRatio * 3;
+guideCanvas.height = tileSize * editorRatio * 3;
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
+
+window.setTimeout(() => {
+  frame.style.height = canvas.getBoundingClientRect().width + "px";
+}, 500);
 
 var ctx = canvas.getContext("2d");
 var guideCtx = guideCanvas.getContext("2d");
@@ -56,19 +62,6 @@ function setLoc(loc, v = 1) {
 function getLoc(loc) {
   return loc.reduce((acc, i) => acc[i], map);
 }
-setLoc([0, 0, 0, 0]);
-setLoc([2, 2, 0, 0]);
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
-setLoc(randomLoc());
 
 function renderMap(map) {
   renderCtx.fill();
@@ -77,57 +70,92 @@ function renderMap(map) {
       for (let cx = 0; cx < tileSize; cx++) {
         for (let cy = 0; cy < tileSize; cy++) {
           let v = getLoc([sx, sy, cx, cy]);
+          if (sx == 1 && sy == 1) {
+            continue;
+          }
           ctx.fillStyle = v == 1 ? "#000" : "#fff0";
           renderCtx.fillStyle = v == 1 ? "#000" : "#fff0";
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
-          ctx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
           renderCtx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
-          ctx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
           renderCtx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
+          gridX *= editorRatio / pixelRatio;
+          gridY *= editorRatio / pixelRatio;
+          ctx.clearRect(gridX, gridY, editorRatio, editorRatio);
+          ctx.fillRect(gridX + 1, gridY + 1, editorRatio - 1, editorRatio - 1);
         }
       }
     }
   }
 }
-for (let index = 0; index < 3; index++) {
-  guideCtx.strokeStyle = "#999";
-  guideCtx.lineWidth = 0.5;
-  let x = (index * canvas.width) / 3;
-  guideCtx.beginPath();
-  guideCtx.moveTo(x, 0);
-  guideCtx.lineTo(x, canvas.height);
-  guideCtx.stroke();
-  guideCtx.beginPath();
-  guideCtx.moveTo(0, x);
-  guideCtx.lineTo(canvas.height, x);
-  guideCtx.stroke();
-}
+function drawGuide() {
+  for (let index = 1; index < 3; index++) {
+    guideCtx.strokeStyle = "#33f";
+    guideCtx.lineWidth = 0.5;
+    let x = (index * canvas.width) / 3;
+    guideCtx.beginPath();
+    guideCtx.moveTo(x, 0);
+    guideCtx.lineTo(x, canvas.height);
+    guideCtx.stroke();
+    guideCtx.beginPath();
+    guideCtx.moveTo(0, x);
+    guideCtx.lineTo(canvas.height, x);
+    guideCtx.stroke();
+  }
 
-for (let index = 0; index < 3 * tileSize; index++) {
-  guideCtx.strokeStyle = "#ccc";
-  let x = (index * canvas.width) / (3 * tileSize);
+  for (let index = 0.0; index < 3 * tileSize; index++) {
+    guideCtx.strokeStyle = "#ccc";
+    let x = (index * canvas.width) / (3 * tileSize);
+    guideCtx.beginPath();
+    guideCtx.moveTo(x, 0);
+    guideCtx.lineTo(x, canvas.height);
+    guideCtx.stroke();
+    guideCtx.beginPath();
+    guideCtx.moveTo(0, x);
+    guideCtx.lineTo(canvas.height, x);
+    guideCtx.stroke();
+  }
+  let third = canvas.width / 3;
+  guideCtx.clearRect(third + 1, third + 1, third - 2, third - 2);
   guideCtx.beginPath();
-  guideCtx.moveTo(x, 0);
-  guideCtx.lineTo(x, canvas.height);
+  guideCtx.moveTo(third * 1, third * 2);
+  guideCtx.lineTo(third * 2, third * 1);
   guideCtx.stroke();
   guideCtx.beginPath();
-  guideCtx.moveTo(0, x);
-  guideCtx.lineTo(canvas.height, x);
+  guideCtx.moveTo(third * 1, third * 1);
+  guideCtx.lineTo(third * 2, third * 2);
   guideCtx.stroke();
 }
+drawGuide();
 renderMap(map);
 setBorder();
 function setBorder() {
   let dataURI = renderCanvas.toDataURL();
   let target = <HTMLElement>document.getElementById("target");
 
-  target.style.borderImage = `url("${dataURI}")`;
-  target.style.borderImageSlice = `${tileSize * pixelRatio} `;
-  target.style.borderImageWidth = `${tileSize * pixelRatio}px`;
-  target.style.borderImageRepeat = "repeat";
-  target.style.borderWidth = `${tileSize * pixelRatio}px`;
-  target.style.borderStyle = "solid";
+  //   target.style.borderImage = `url("${dataURI}")`;
+  //   target.style.borderImageSlice = `${tileSize * pixelRatio} `;
+  //   target.style.borderImageWidth = `${tileSize * pixelRatio}px `;
+  //   target.style.borderImageRepeat = "round";
+  //   target.style.borderWidth = `${tileSize * pixelRatio}px`;
+  //   target.style.borderStyle = "solid";
+
+  let style = <HTMLStyleElement>document.getElementById("border-style");
+  if (style) style.remove();
+  style = document.createElement("style");
+  style.id = "border-style";
+  document.head.appendChild(style);
+  //   style.sheet.insertRule(`.bordered {padding-right: ${(value / 5) * mult}px}`);
+  let css = `.bordered {
+  border-image:  url("${dataURI}");
+  border-image-repeat:  round;
+  border-image-slice:  ${tileSize * pixelRatio};
+  border-image-width:  ${tileSize * pixelRatio}px;
+  border-width:  ${tileSize * pixelRatio}px;
+  border-style:  solid;
+}`;
+  style.sheet.insertRule(css);
+  target.textContent = css;
 }
 let draw = (e, isClick = false) => {
   if (!isDown) {
@@ -138,8 +166,8 @@ let draw = (e, isClick = false) => {
   let y = e.clientY - top;
   let canvasX = (x / width) * canvas.width;
   let canvasY = (y / height) * canvas.height;
-  let gridX = Math.floor(canvasX / pixelRatio);
-  let gridY = Math.floor(canvasY / pixelRatio);
+  let gridX = Math.floor(canvasX / editorRatio);
+  let gridY = Math.floor(canvasY / editorRatio);
 
   let sx = Math.floor(gridX / tileSize);
   let sy = Math.floor(gridY / tileSize);
@@ -151,8 +179,6 @@ let draw = (e, isClick = false) => {
     v = 0;
   }
   setLoc(loc, 1 - v);
-  //   ctx.fillStyle = "#000";
-  //   ctx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
   renderMap(map);
   setBorder();
 };
@@ -162,10 +188,11 @@ canvas.addEventListener("mousedown", e => {
   draw(e, true);
 });
 canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", () => {
-  isDown = false;
+
+window.addEventListener("mousedown", () => {
+  isDown = true;
 });
-canvas.addEventListener("mouseleave", () => {
+window.addEventListener("mouseup", () => {
   isDown = false;
 });
 
