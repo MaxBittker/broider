@@ -22,7 +22,7 @@ var guideCtx = guideCanvas.getContext("2d");
 var renderCtx = renderCanvas.getContext("2d");
 
 var isDown = false;
-
+var isErasing = false;
 function newCell() {
   let rows = new Array(tileSize).fill(0);
   return rows.map((v, i) => new Array(tileSize).fill(0));
@@ -65,6 +65,8 @@ function getLoc(loc) {
 
 function renderMap(map) {
   renderCtx.fill();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   for (let sx = 0; sx < 3; sx++) {
     for (let sy = 0; sy < 3; sy++) {
       for (let cx = 0; cx < tileSize; cx++) {
@@ -81,7 +83,6 @@ function renderMap(map) {
           renderCtx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
           gridX *= editorRatio / pixelRatio;
           gridY *= editorRatio / pixelRatio;
-          ctx.clearRect(gridX, gridY, editorRatio, editorRatio);
           ctx.fillRect(gridX + 1, gridY + 1, editorRatio - 1, editorRatio - 1);
         }
       }
@@ -133,13 +134,6 @@ function setBorder() {
   let dataURI = renderCanvas.toDataURL();
   let target = <HTMLElement>document.getElementById("target");
 
-  //   target.style.borderImage = `url("${dataURI}")`;
-  //   target.style.borderImageSlice = `${tileSize * pixelRatio} `;
-  //   target.style.borderImageWidth = `${tileSize * pixelRatio}px `;
-  //   target.style.borderImageRepeat = "round";
-  //   target.style.borderWidth = `${tileSize * pixelRatio}px`;
-  //   target.style.borderStyle = "solid";
-
   let style = <HTMLStyleElement>document.getElementById("border-style");
   if (style) style.remove();
   style = document.createElement("style");
@@ -158,9 +152,6 @@ function setBorder() {
   target.textContent = css;
 }
 let draw = (e, isClick = false) => {
-  if (!isDown) {
-    return;
-  }
   let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
@@ -175,14 +166,34 @@ let draw = (e, isClick = false) => {
   let cy = gridY % tileSize;
   let loc = [sx, sy, cx, cy];
   let v = getLoc(loc) || 0;
+  if (isClick && v == 1) {
+    isErasing = true;
+  }
+
   if (!isClick) {
     v = 0;
   }
-  setLoc(loc, 1 - v);
-  renderMap(map);
-  setBorder();
-};
 
+  if (isErasing) {
+    v = 1;
+  }
+
+  if (isDown) {
+    setLoc(loc, 1 - v);
+    renderMap(map);
+  } else {
+    renderMap(map);
+
+    ctx.fillStyle = getLoc(loc) == 1 ? "#228" : "#ddf";
+    ctx.fillRect(
+      gridX * editorRatio,
+      gridY * editorRatio,
+      editorRatio,
+      editorRatio
+    );
+  }
+  window.setTimeout(setBorder, 0);
+};
 canvas.addEventListener("mousedown", e => {
   isDown = true;
   draw(e, true);
@@ -194,8 +205,12 @@ window.addEventListener("mousedown", () => {
 });
 window.addEventListener("mouseup", () => {
   isDown = false;
+  isErasing = false;
 });
-
+canvas.addEventListener("touchend", e => {
+  isDown = false;
+  isErasing = false;
+});
 canvas.addEventListener("touchstart", e => {
   isDown = true;
 
