@@ -1,4 +1,4 @@
-var tileSize = 8;
+var tileSize = 7;
 var pixelRatio = 4;
 var editorRatio = 4 * pixelRatio;
 
@@ -72,13 +72,15 @@ function renderMap(map) {
       for (let cx = 0; cx < tileSize; cx++) {
         for (let cy = 0; cy < tileSize; cy++) {
           let v = getLoc([sx, sy, cx, cy]);
-          if (sx == 1 && sy == 1) {
-            continue;
-          }
+
           ctx.fillStyle = v == 1 ? "#000" : "#fff0";
           renderCtx.fillStyle = v == 1 ? "#000" : "#fff0";
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
+
+          if (sx == 1 && sy == 1) {
+            continue;
+          }
           renderCtx.clearRect(gridX, gridY, pixelRatio, pixelRatio);
           renderCtx.fillRect(gridX, gridY, pixelRatio, pixelRatio);
           gridX *= editorRatio / pixelRatio;
@@ -186,10 +188,10 @@ let draw = (e, isClick = false) => {
 
     ctx.fillStyle = getLoc(loc) == 1 ? "#228" : "#ddf";
     ctx.fillRect(
-      gridX * editorRatio,
-      gridY * editorRatio,
-      editorRatio,
-      editorRatio
+      gridX * editorRatio + 1,
+      gridY * editorRatio + 1,
+      editorRatio - 1,
+      editorRatio - 1
     );
   }
   window.setTimeout(setBorder, 0);
