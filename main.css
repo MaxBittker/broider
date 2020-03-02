@@ -46,12 +46,14 @@
   grid-template-rows: 50% 50%;
   grid-template-columns: 50% 50%;
   justify-items: center;
-  align-items: center;
-  /* grid-column-gap: 8px; */
-  /* grid-row-gap: 8px; */
+  /* align-items: center; */
+  grid-column-gap: 4px;
+  grid-row-gap: 8px;
 }
 #tools img {
   filter: contrast(0.01);
+  /* padding: 5%; */
+  /* height: 45%; */
 }
 .selected {
   filter: none !important;

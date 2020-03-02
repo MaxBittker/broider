@@ -100,15 +100,15 @@ function setBorder() {
 function renderHover(map: any[][][][], loc: number[]) {
   let x = loc[0] * tileSize + loc[2];
   let y = loc[1] * tileSize + loc[3];
-  ctx.fillStyle = getLoc(map, loc) == 1 ? "#228" : "#ddf";
+  ctx.fillStyle = getLoc(map, loc) == 1 ? "#dde" : "#dde";
   if (loc[0] == 1 && loc[1] == 1) {
     return;
   }
   ctx.fillRect(
-    x * editorRatio + 1,
-    y * editorRatio + 1,
-    editorRatio - 1,
-    editorRatio - 1
+    x * editorRatio + 0,
+    y * editorRatio + 0,
+    editorRatio - 0,
+    editorRatio - 0
   );
 }
 export { renderMap, drawGuide, setBorder, renderHover, cleanMap };

@@ -61,7 +61,7 @@ function draw(loc, v) {
     setLoc(map, loc, 1 - v);
   }
 }
-let handleEvent = (e, isClick = false, isTouchStart = false) => {
+let handleEvent = (e, isClick = false, isHover = false) => {
   let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
@@ -75,17 +75,19 @@ let handleEvent = (e, isClick = false, isTouchStart = false) => {
     : [[gridX, gridY]];
 
   cleanMap();
+  // renderMap(map);
 
   rotatePairs.forEach(([gridX, gridY]) => {
     let sx = Math.floor(gridX / tileSize);
     let sy = Math.floor(gridY / tileSize);
     let cx = gridX % tileSize;
     let cy = gridY % tileSize;
-    if (sx < 0 || sx > 2 || sy < 0 || sy > 2) {
-      return;
-    }
     let loc = [sx, sy, cx, cy];
-    if (!loc) {
+
+    if (isHover) {
+      renderHover(map, loc);
+    }
+    if (sx < 0 || sx > 2 || sy < 0 || sy > 2) {
       return;
     }
     let v = getLoc(map, loc);
@@ -98,7 +100,6 @@ let handleEvent = (e, isClick = false, isTouchStart = false) => {
       v = 1;
     }
     draw(loc, v);
-    renderHover(map, loc);
   });
   renderMap(map);
 
@@ -109,8 +110,14 @@ canvas.addEventListener("mousedown", e => {
   isDown = true;
   handleEvent(e, true);
 });
-canvas.addEventListener("mousemove", handleEvent);
-
+canvas.addEventListener("mousemove", e => {
+  handleEvent(e, false, true);
+});
+canvas.addEventListener("mouseout", e => {
+  console.log("out");
+  cleanMap();
+  renderMap(map);
+});
 window.addEventListener("mousedown", () => {
   isDown = true;
 });
