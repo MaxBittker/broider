@@ -1,5 +1,4 @@
 var tileSize = 7;
-var pixelRatio = 4;
-var editorRatio = 4 * pixelRatio;
+var editorRatio = 16;
 
-export { tileSize, pixelRatio, editorRatio };
+export { tileSize, editorRatio };

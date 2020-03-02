@@ -1,4 +1,4 @@
-import { tileSize, pixelRatio, editorRatio } from "./state";
+import { tileSize, editorRatio } from "./state";
 import { getLoc } from "./utils";
 
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
@@ -7,11 +7,11 @@ let renderCanvas = <HTMLCanvasElement>document.getElementById("render");
 var ctx = canvas.getContext("2d");
 var guideCtx = guideCanvas.getContext("2d");
 var renderCtx = renderCanvas.getContext("2d");
-
+renderCtx.imageSmoothingEnabled = false;
 function cleanMap() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-function renderMap(map) {
+function renderMap(map, pixelRatio) {
   renderCtx.fill();
 
   for (let sx = 0; sx < 3; sx++) {
@@ -77,7 +77,7 @@ function drawGuide() {
   guideCtx.stroke();
 }
 
-function setBorder() {
+function setBorder(pixelRatio) {
   let dataURI = renderCanvas.toDataURL();
   let target = <HTMLElement>document.getElementById("target");
 

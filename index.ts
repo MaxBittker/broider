@@ -5,11 +5,17 @@ import {
   drawGuide,
   cleanMap
 } from "./render";
-import { tileSize, editorRatio, pixelRatio } from "./state";
-import { newGrid, getLoc, setLoc, rotatePair, rotationSet } from "./utils";
+
+import onePng from "./1.png";
+import twoPng from "./2.png";
+import fourPng from "./4.png";
+
+import { tileSize, editorRatio } from "./state";
+import { newGrid, getLoc, setLoc, rotationSet } from "./utils";
 let penElement = <HTMLElement>document.getElementById("pen");
 let eraserElement = <HTMLElement>document.getElementById("eraser");
 let symmetryElement = <HTMLElement>document.getElementById("symmetry");
+let scaleElement = <HTMLImageElement>document.getElementById("scale");
 
 let frame = <HTMLElement>document.getElementById("editor-frame");
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
@@ -19,9 +25,23 @@ canvas.width = tileSize * editorRatio * 3;
 canvas.height = tileSize * editorRatio * 3;
 guideCanvas.width = tileSize * editorRatio * 3;
 guideCanvas.height = tileSize * editorRatio * 3;
+
+let sizeIndex = 2;
+let sizeList = [1, 2, 4];
+let pngList = [onePng, twoPng, fourPng];
+
+let pixelRatio = sizeList[sizeIndex];
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
-
+scaleElement.addEventListener("click", () => {
+  sizeIndex = (sizeIndex + 1) % sizeList.length;
+  scaleElement.src = pngList[sizeIndex];
+  pixelRatio = sizeList[sizeIndex];
+  renderCanvas.width = tileSize * pixelRatio * 3;
+  renderCanvas.height = tileSize * pixelRatio * 3;
+  renderMap(map, pixelRatio);
+  setBorder(pixelRatio);
+});
 document.addEventListener("DOMContentLoaded", () => {
   frame.style.height = canvas.getBoundingClientRect().width + "px";
 });
@@ -53,8 +73,8 @@ penElement.addEventListener("click", e => {
 let map = newGrid();
 
 drawGuide();
-renderMap(map);
-setBorder();
+renderMap(map, pixelRatio);
+setBorder(pixelRatio);
 
 function draw(loc, v) {
   if (isDown) {
@@ -75,7 +95,7 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     : [[gridX, gridY]];
 
   cleanMap();
-  // renderMap(map);
+  // renderMap(map,pixelRatio);
 
   rotatePairs.forEach(([gridX, gridY]) => {
     let sx = Math.floor(gridX / tileSize);
@@ -101,9 +121,9 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     }
     draw(loc, v);
   });
-  renderMap(map);
+  renderMap(map, pixelRatio);
 
-  window.setTimeout(setBorder, 0);
+  window.setTimeout(() => setBorder(pixelRatio), 0);
 };
 
 canvas.addEventListener("mousedown", e => {
@@ -114,9 +134,8 @@ canvas.addEventListener("mousemove", e => {
   handleEvent(e, false, true);
 });
 canvas.addEventListener("mouseout", e => {
-  console.log("out");
   cleanMap();
-  renderMap(map);
+  renderMap(map, pixelRatio);
 });
 window.addEventListener("mousedown", () => {
   isDown = true;
