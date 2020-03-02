@@ -27,6 +27,7 @@
   bottom: 0;
   width: 360px;
   max-width: 100%;
+  image-rendering: crisp-edges;
   image-rendering: pixelated;
   /* cursor: crosshair; */
 }
