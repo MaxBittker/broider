@@ -64,6 +64,8 @@ body {
   max-width: 900px;
   margin: auto;
   filter: drop-shadow(1px 1px 4px rgb(107, 117, 147));
+  display: flex;
+  flex-direction: column;
 }
 #render {
   justify-self: end;
@@ -93,13 +95,14 @@ pre {
 }
 .showcase {
   width: 100%;
+  /* flex-grow: 1; */
 
   margin: auto;
   margin-top: 8px;
 
   display: grid;
-  /* grid-template-columns: 33% auto 96px; */
-  grid-template-rows: 160px 160px 160px;
+  grid-template-columns: 33% auto 33%;
+  grid-template-rows: 160px 160px auto;
   grid-column-gap: 8px;
   grid-row-gap: 8px;
 }
