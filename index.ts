@@ -81,7 +81,7 @@ function pushUndo() {
 
   undoStack.push(candidate);
 
-  if (undoStack.length > 20) {
+  if (undoStack.length > 50) {
     undoStack.shift();
   }
   undoElement.classList.add("selected");
