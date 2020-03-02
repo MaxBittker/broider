@@ -16,6 +16,7 @@ let penElement = <HTMLElement>document.getElementById("pen");
 let eraserElement = <HTMLElement>document.getElementById("eraser");
 let symmetryElement = <HTMLElement>document.getElementById("symmetry");
 let scaleElement = <HTMLImageElement>document.getElementById("scale");
+let undoElement = <HTMLImageElement>document.getElementById("undo");
 
 let frame = <HTMLElement>document.getElementById("editor-frame");
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
@@ -29,7 +30,6 @@ guideCanvas.height = tileSize * editorRatio * 3;
 let sizeIndex = 2;
 let sizeList = [1, 2, 4];
 let pngList = [onePng, twoPng, fourPng];
-
 let pixelRatio = sizeList[sizeIndex];
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
@@ -70,8 +70,39 @@ penElement.addEventListener("click", e => {
   eraserElement.classList.remove("selected");
 });
 
-let map = newGrid();
+var map = newGrid();
+let undoStack = [JSON.stringify(map)];
+function pushUndo() {
+  let candidate = JSON.stringify(map);
+  let top = undoStack[undoStack.length - 1];
+  if (candidate == top) {
+    return;
+  }
 
+  undoStack.push(candidate);
+
+  if (undoStack.length > 20) {
+    undoStack.shift();
+  }
+  undoElement.classList.add("selected");
+}
+function popUndo() {
+  undoStack.pop();
+  let old = undoStack[undoStack.length - 1];
+  if (old) {
+    map = JSON.parse(old);
+    cleanMap();
+    renderMap(map, pixelRatio);
+    setBorder(pixelRatio);
+  }
+}
+undoElement.addEventListener("click", e => {
+  popUndo();
+  if (undoStack.length < 2) {
+    undoElement.classList.remove("selected");
+  }
+  e.preventDefault();
+});
 drawGuide();
 renderMap(map, pixelRatio);
 setBorder(pixelRatio);
@@ -104,11 +135,11 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     let cy = gridY % tileSize;
     let loc = [sx, sy, cx, cy];
 
-    if (isHover) {
-      renderHover(map, loc);
-    }
     if (sx < 0 || sx > 2 || sy < 0 || sy > 2) {
       return;
+    }
+    if (isHover) {
+      renderHover(map, loc);
     }
     let v = getLoc(map, loc);
 
@@ -122,7 +153,6 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     draw(loc, v);
   });
   renderMap(map, pixelRatio);
-
   window.setTimeout(() => setBorder(pixelRatio), 0);
 };
 
@@ -142,9 +172,11 @@ window.addEventListener("mousedown", () => {
 });
 window.addEventListener("mouseup", () => {
   isDown = false;
+  pushUndo();
 });
 canvas.addEventListener("touchend", e => {
   isDown = false;
+  // pushUndo();
 });
 canvas.addEventListener("touchstart", e => {
   isDown = true;
