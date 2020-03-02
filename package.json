@@ -1,5 +1,5 @@
 {
-  "name": "border",
+  "name": "broider",
   "version": "1.0.0",
   "description": "2bit 9patch editor",
   "main": "index.js",
@@ -11,16 +11,16 @@
   },
   "scripts": {
     "start": "parcel develop index.html",
-    "build": "parcel build index.html  -d docs --public-url /border/"
+    "build": "parcel build index.html  -d docs --public-url /broider/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaxBittker/border.git"
+    "url": "git+https://github.com/MaxBittker/broider.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MaxBittker/border/issues"
+    "url": "https://github.com/MaxBittker/broider/issues"
   },
-  "homepage": "https://github.com/MaxBittker/border#readme"
+  "homepage": "https://github.com/MaxBittker/broider#readme"
 }
