@@ -70,7 +70,7 @@ body {
 #render {
   justify-self: end;
   align-self: flex-end;
-  height: 96px;
+  /* height: 96px; */
   image-rendering: pixelated;
 }
 #target {
@@ -79,6 +79,12 @@ body {
   width: 80%;
   max-width: 450px;
   /* height: 100%; */
+}
+#scale {
+  justify-self: end;
+  align-self: flex-end;
+  /* height: 96px; */
+  image-rendering: pixelated;
 }
 textarea {
   height: 100%;
@@ -114,6 +120,10 @@ pre {
   .showcase {
     grid-template-columns: 33% auto 96px;
     grid-template-rows: 160px;
+  }
+  #render {
+    position: fixed;
+    right: 1000px;
   }
 }
 

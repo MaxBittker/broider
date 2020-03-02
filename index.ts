@@ -176,7 +176,7 @@ window.addEventListener("mouseup", () => {
 });
 canvas.addEventListener("touchend", e => {
   isDown = false;
-  // pushUndo();
+  pushUndo();
 });
 canvas.addEventListener("touchstart", e => {
   isDown = true;
