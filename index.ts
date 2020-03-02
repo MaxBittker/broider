@@ -1,6 +1,12 @@
-import { renderMap, setBorder, renderHover, drawGuide } from "./render";
+import {
+  renderMap,
+  setBorder,
+  renderHover,
+  drawGuide,
+  cleanMap
+} from "./render";
 import { tileSize, editorRatio, pixelRatio } from "./state";
-import { newGrid, getLoc, setLoc } from "./utils";
+import { newGrid, getLoc, setLoc, rotatePair, rotationSet } from "./utils";
 
 let frame = <HTMLElement>document.getElementById("editor-frame");
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
@@ -19,14 +25,19 @@ window.setTimeout(() => {
 
 var isDown = false;
 var isErasing = false;
-
+var rotationalSymmetry = true;
 let map = newGrid();
 
 drawGuide();
 renderMap(map);
 setBorder();
 
-let draw = (e, isClick = false, isTouchStart = false) => {
+function draw(loc, v) {
+  if (isDown) {
+    setLoc(map, loc, 1 - v);
+  }
+}
+let handleEvent = (e, isClick = false, isTouchStart = false) => {
   let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
@@ -35,38 +46,47 @@ let draw = (e, isClick = false, isTouchStart = false) => {
   let gridX = Math.floor(canvasX / editorRatio);
   let gridY = Math.floor(canvasY / editorRatio);
 
-  let sx = Math.floor(gridX / tileSize);
-  let sy = Math.floor(gridY / tileSize);
-  let cx = gridX % tileSize;
-  let cy = gridY % tileSize;
-  let loc = [sx, sy, cx, cy];
-  let v = getLoc(map, loc);
-  if (isClick && v == 1) {
-    isErasing = true;
-  }
+  let rotatePairs = rotationSet([gridX, gridY]);
+  cleanMap();
 
-  if (!isClick) {
-    v = 0;
-  }
+  rotatePairs.forEach(([gridX, gridY]) => {
+    let sx = Math.floor(gridX / tileSize);
+    let sy = Math.floor(gridY / tileSize);
+    let cx = gridX % tileSize;
+    let cy = gridY % tileSize;
+    if (sx < 0 || sx > 2 || sy < 0 || sy > 2) {
+      return;
+    }
+    let loc = [sx, sy, cx, cy];
+    if (!loc) {
+      return;
+    }
+    let v = getLoc(map, loc);
 
-  if (isErasing) {
-    v = 1;
-  }
+    if (isClick && v == 1) {
+      isErasing = true;
+    }
 
-  if (isDown) {
-    setLoc(map, loc, 1 - v);
-    renderMap(map);
-  } else {
-    renderMap(map);
-    renderHover(map, gridX, gridY, loc);
-  }
+    if (!isClick) {
+      v = 0;
+    }
+
+    if (isErasing) {
+      v = 1;
+    }
+    draw(loc, v);
+    renderHover(map, loc);
+  });
+  renderMap(map);
+
   window.setTimeout(setBorder, 0);
 };
+
 canvas.addEventListener("mousedown", e => {
   isDown = true;
-  draw(e, true);
+  handleEvent(e, true);
 });
-canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mousemove", handleEvent);
 
 window.addEventListener("mousedown", () => {
   isDown = true;
@@ -88,7 +108,7 @@ canvas.addEventListener("touchstart", e => {
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
-    draw(e, true);
+    handleEvent(e, true);
   }
 });
 canvas.addEventListener("touchmove", e => {
@@ -101,7 +121,7 @@ canvas.addEventListener("touchmove", e => {
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
-    draw(e);
+    handleEvent(e);
   }
   // isErasing = false;
 });

@@ -27,6 +27,20 @@ function randomInt(amin, amax?: number) {
 function randomLoc() {
   return [randomInt(3), randomInt(3), randomInt(tileSize), randomInt(tileSize)];
 }
+function rotatePair([x, y]) {
+  let gridSize = 3 * tileSize;
+  return [gridSize - y, x];
+}
+function rotationSet([x, y], n = 1) {
+  let gridSize = 3 * tileSize - 1;
+
+  return [
+    [x, y],
+    [gridSize - y, x],
+    [gridSize - x, gridSize - y],
+    [y, gridSize - x]
+  ];
+}
 function getLoc(map: any[][][][], loc: number[]): number {
   let r = loc.reduce((acc, i) => acc[i], map);
   if (typeof r !== "number") {
@@ -39,8 +53,16 @@ function getLoc(map: any[][][][], loc: number[]): number {
 function setLoc(map: any[][][][], loc: any[], v: number = 1) {
   let address = loc.slice(0, -1);
   let lastPos = loc[loc.length - 1];
-  //   console.log(v);
+
   address.reduce((acc, i) => acc[i], map)[lastPos] = v;
 }
 
-export { newGrid, randomLoc, randomInt, getLoc, setLoc };
+export {
+  newGrid,
+  randomLoc,
+  randomInt,
+  getLoc,
+  setLoc,
+  rotatePair,
+  rotationSet
+};

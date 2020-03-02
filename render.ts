@@ -8,9 +8,11 @@ var ctx = canvas.getContext("2d");
 var guideCtx = guideCanvas.getContext("2d");
 var renderCtx = renderCanvas.getContext("2d");
 
+function cleanMap() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 function renderMap(map) {
   renderCtx.fill();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   for (let sx = 0; sx < 3; sx++) {
     for (let sy = 0; sy < 3; sy++) {
@@ -97,7 +99,9 @@ function setBorder() {
   target.textContent = css;
 }
 
-function renderHover(map: any[][][][], x: number, y: number, loc: number[]) {
+function renderHover(map: any[][][][], loc: number[]) {
+  let x = loc[0] * tileSize + loc[2];
+  let y = loc[1] * tileSize + loc[3];
   ctx.fillStyle = getLoc(map, loc) == 1 ? "#228" : "#ddf";
   if (loc[0] == 1 && loc[1] == 1) {
     return;
@@ -109,4 +113,4 @@ function renderHover(map: any[][][][], x: number, y: number, loc: number[]) {
     editorRatio - 1
   );
 }
-export { renderMap, drawGuide, setBorder, renderHover };
+export { renderMap, drawGuide, setBorder, renderHover, cleanMap };
