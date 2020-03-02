@@ -1,4 +1,4 @@
-# border
+# border emboiderer
 
 2bit 9patch editor
 
