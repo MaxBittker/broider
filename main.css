@@ -65,7 +65,7 @@ body {
   background-color: antiquewhite;
   max-width: 900px;
   margin: auto;
-  filter: drop-shadow(1px 1px 5px rgb(107, 133, 107));
+  filter: drop-shadow(1px 1px 4px rgb(107, 117, 147));
 }
 #render {
   justify-self: end;

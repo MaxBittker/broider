@@ -92,7 +92,7 @@ function setBorder() {
     pixelRatio}px / 0 round;
     border-width:  ${tileSize * pixelRatio}px;
     border-style:  solid;
-  }`;
+}`;
   style.sheet.insertRule(css);
   target.textContent = css;
 }
