@@ -41,13 +41,13 @@ scaleElement.addEventListener("click", () => {
   renderCanvas.height = tileSize * pixelRatio * 3;
   renderMap(map, pixelRatio);
   setBorder(pixelRatio);
+  updateFrameHeight();
 });
-document.addEventListener("DOMContentLoaded", () => {
+function updateFrameHeight() {
   frame.style.height = canvas.getBoundingClientRect().width + "px";
-});
-window.addEventListener("resize", () => {
-  frame.style.height = canvas.getBoundingClientRect().width + "px";
-});
+}
+document.addEventListener("DOMContentLoaded", updateFrameHeight);
+window.addEventListener("resize", updateFrameHeight);
 
 var isDown = false;
 var isErasing = false;
