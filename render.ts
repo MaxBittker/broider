@@ -86,12 +86,10 @@ function setBorder() {
   style = document.createElement("style");
   style.id = "border-style";
   document.head.appendChild(style);
-  //   style.sheet.insertRule(`.bordered {padding-right: ${(value / 5) * mult}px}`);
-  let css = `.bordered {
-    border-image:  url("${dataURI}");
-    border-image-repeat:  round;
-    border-image-slice:  ${tileSize * pixelRatio};
-    border-image-width:  ${tileSize * pixelRatio}px;
+  //   style.sheet.insertRule(`.broider {padding-right: ${(value / 5) * mult}px}`);
+  let css = `.broider {
+    border-image:  url("${dataURI}") ${tileSize * pixelRatio} /  ${tileSize *
+    pixelRatio}px / 0 round;
     border-width:  ${tileSize * pixelRatio}px;
     border-style:  solid;
   }`;

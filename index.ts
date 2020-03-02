@@ -7,6 +7,9 @@ import {
 } from "./render";
 import { tileSize, editorRatio, pixelRatio } from "./state";
 import { newGrid, getLoc, setLoc, rotatePair, rotationSet } from "./utils";
+let penElement = <HTMLElement>document.getElementById("pen");
+let eraserElement = <HTMLElement>document.getElementById("eraser");
+let symmetryElement = <HTMLElement>document.getElementById("symmetry");
 
 let frame = <HTMLElement>document.getElementById("editor-frame");
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
@@ -19,13 +22,34 @@ guideCanvas.height = tileSize * editorRatio * 3;
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
 
-window.setTimeout(() => {
+document.addEventListener("DOMContentLoaded", () => {
   frame.style.height = canvas.getBoundingClientRect().width + "px";
-}, 500);
+});
+window.addEventListener("resize", () => {
+  frame.style.height = canvas.getBoundingClientRect().width + "px";
+});
 
 var isDown = false;
 var isErasing = false;
 var rotationalSymmetry = true;
+
+symmetryElement.addEventListener("click", e => {
+  rotationalSymmetry = !rotationalSymmetry;
+  symmetryElement.classList.toggle("selected");
+});
+
+eraserElement.addEventListener("click", e => {
+  isErasing = true;
+  eraserElement.classList.add("selected");
+  penElement.classList.remove("selected");
+});
+
+penElement.addEventListener("click", e => {
+  isErasing = false;
+  penElement.classList.add("selected");
+  eraserElement.classList.remove("selected");
+});
+
 let map = newGrid();
 
 drawGuide();
@@ -46,7 +70,10 @@ let handleEvent = (e, isClick = false, isTouchStart = false) => {
   let gridX = Math.floor(canvasX / editorRatio);
   let gridY = Math.floor(canvasY / editorRatio);
 
-  let rotatePairs = rotationSet([gridX, gridY]);
+  let rotatePairs = rotationalSymmetry
+    ? rotationSet([gridX, gridY])
+    : [[gridX, gridY]];
+
   cleanMap();
 
   rotatePairs.forEach(([gridX, gridY]) => {
@@ -62,10 +89,6 @@ let handleEvent = (e, isClick = false, isTouchStart = false) => {
       return;
     }
     let v = getLoc(map, loc);
-
-    if (isClick && v == 1) {
-      isErasing = true;
-    }
 
     if (!isClick) {
       v = 0;
@@ -93,11 +116,9 @@ window.addEventListener("mousedown", () => {
 });
 window.addEventListener("mouseup", () => {
   isDown = false;
-  isErasing = false;
 });
 canvas.addEventListener("touchend", e => {
   isDown = false;
-  isErasing = false;
 });
 canvas.addEventListener("touchstart", e => {
   isDown = true;
@@ -108,26 +129,27 @@ canvas.addEventListener("touchstart", e => {
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
-    handleEvent(e, true);
+    handleEvent(e);
   }
 });
 canvas.addEventListener("touchmove", e => {
   e.preventDefault();
   isDown = true;
-  if (isErasing) {
-    return;
-  }
+
   const touches = e.targetTouches;
   for (let i = 0; i < touches.length; i++) {
     e["clientX"] = touches[i].clientX;
     e["clientY"] = touches[i].clientY;
     handleEvent(e);
   }
-  // isErasing = false;
 });
-
-canvas.addEventListener("touchend", e => {
-  e.preventDefault();
+let lastTouchEnd = 0;
+window.addEventListener("touchend", e => {
+  //prevent double tap zoom
+  if (e.timeStamp - lastTouchEnd <= 500) {
+    e.preventDefault();
+    e.target.click();
+  }
   isDown = false;
-  isErasing = false;
+  lastTouchEnd = e.timeStamp;
 });
