@@ -6,9 +6,9 @@ import {
   cleanMap
 } from "./render";
 
-import onePng from "./1.png";
-import twoPng from "./2.png";
-import fourPng from "./4.png";
+import onePng from "./assets/1.png";
+import twoPng from "./assets/2.png";
+import fourPng from "./assets/4.png";
 
 import { tileSize, editorRatio } from "./state";
 import { newGrid, getLoc, setLoc, rotationSet } from "./utils";
