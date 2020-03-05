@@ -4,7 +4,7 @@ import {
   renderHover,
   drawGuide,
   cleanMap
-} from "./render";
+} from "./src/render";
 
 import onePng from "./assets/1.png";
 import twoPng from "./assets/2.png";
