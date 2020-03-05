@@ -78,7 +78,30 @@ body {
   justify-self: end;
   width: 80%;
   max-width: 450px;
+  position: relative;
   /* height: 100%; */
+}
+#target:after {
+  content: attr(data-after);
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
+@keyframes flash {
+  0% {
+    filter: drop-shadow(1px 1px 15px rgb(107, 117, 147));
+    transform: translateY(-3px);
+  }
+  100% {
+    filter: drop-shadow(1px 1px 0px rgb(107, 117, 147));
+    transform: translateY(0px);
+  }
+}
+.flash {
+  animation: flash;
+  animation-duration: 400ms;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
 }
 #scale {
   justify-self: end;
@@ -107,7 +130,7 @@ pre {
   margin-top: 8px;
 
   display: grid;
-  grid-template-columns: 33% auto 33%;
+  grid-template-columns: 33% auto 20%;
   grid-template-rows: 160px 160px auto;
   grid-column-gap: 8px;
   grid-row-gap: 8px;

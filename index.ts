@@ -28,7 +28,7 @@ guideCanvas.width = tileSize * editorRatio * 3;
 guideCanvas.height = tileSize * editorRatio * 3;
 
 let sizeIndex = 2;
-let sizeList = [1, 2, 4];
+let sizeList = [2, 4, 8];
 let pngList = [onePng, twoPng, fourPng];
 let pixelRatio = sizeList[sizeIndex];
 renderCanvas.width = tileSize * pixelRatio * 3;

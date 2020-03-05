@@ -1,5 +1,9 @@
-import { tileSize, editorRatio } from "./state";
+import copy from "copy-to-clipboard";
+
+import { editorRatio, tileSize } from "./state";
 import { getLoc } from "./utils";
+
+let target = <HTMLElement>document.getElementById("target");
 
 let canvas = <HTMLCanvasElement>document.getElementById("editor");
 let guideCanvas = <HTMLCanvasElement>document.getElementById("guide");
@@ -79,18 +83,17 @@ function drawGuide() {
 
 function setBorder(pixelRatio) {
   let dataURI = renderCanvas.toDataURL();
-  let target = <HTMLElement>document.getElementById("target");
 
   let style = <HTMLStyleElement>document.getElementById("border-style");
   if (style) style.remove();
   style = document.createElement("style");
   style.id = "border-style";
   document.head.appendChild(style);
-  //   style.sheet.insertRule(`.broider {padding-right: ${(value / 5) * mult}px}`);
+
+  let viewsize = tileSize * pixelRatio;
   let css = `.broider {
-    border-image:  url("${dataURI}") ${tileSize * pixelRatio} /  ${tileSize *
-    pixelRatio}px / 0 round;
-    border-width:  ${tileSize * pixelRatio}px;
+    border-image:  url("${dataURI}") ${viewsize} /  ${viewsize / 2}px / 0 round;
+    border-width:  ${viewsize / 2}px;
     border-style:  solid;
 }`;
   style.sheet.insertRule(css);
@@ -110,5 +113,24 @@ function renderHover(map: any[][][][], loc: number[]) {
     editorRatio - 0,
     editorRatio - 0
   );
+}
+
+target.addEventListener("click", copyTarget);
+function resetCopy() {
+  target.setAttribute("data-after", "[Click to copy]");
+}
+
+resetCopy();
+function copyTarget() {
+  copy(target.textContent, {
+    message: "Press #{key} to copy css"
+  });
+  target.setAttribute("data-after", "Copied to your clipboard!");
+  target.classList.remove("flash");
+
+  window.setTimeout(() => {
+    target.classList.add("flash");
+  }, 1);
+  window.setTimeout(resetCopy, 2500);
 }
 export { renderMap, drawGuide, setBorder, renderHover, cleanMap };
