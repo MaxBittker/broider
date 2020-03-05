@@ -2,6 +2,6 @@
 
 2bit 9patch editor
 
-https://maxbittker.github.io/border/
+https://maxbittker.github.io/broider/
 
 ![img0](screenshot.png)
