@@ -10,8 +10,8 @@ import onePng from "./assets/1.png";
 import twoPng from "./assets/2.png";
 import fourPng from "./assets/4.png";
 
-import { tileSize, editorRatio } from "./state";
-import { newGrid, getLoc, setLoc, rotationSet } from "./utils";
+import { tileSize, editorRatio } from "./src/state";
+import { newGrid, getLoc, setLoc, rotationSet } from "./src/utils";
 let penElement = <HTMLElement>document.getElementById("pen");
 let eraserElement = <HTMLElement>document.getElementById("eraser");
 let symmetryElement = <HTMLElement>document.getElementById("symmetry");
@@ -28,7 +28,7 @@ guideCanvas.width = tileSize * editorRatio * 3;
 guideCanvas.height = tileSize * editorRatio * 3;
 
 let sizeIndex = 2;
-let sizeList = [2, 4, 8];
+let sizeList = [1, 2, 4];
 let pngList = [onePng, twoPng, fourPng];
 let pixelRatio = sizeList[sizeIndex];
 renderCanvas.width = tileSize * pixelRatio * 3;

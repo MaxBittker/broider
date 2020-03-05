@@ -28,7 +28,6 @@ function renderMap(map, pixelRatio) {
           renderCtx.fillStyle = v == 1 ? "#000" : "#fff0";
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
-
           if (sx == 1 && sy == 1) {
             continue;
           }
@@ -92,8 +91,8 @@ function setBorder(pixelRatio) {
 
   let viewsize = tileSize * pixelRatio;
   let css = `.broider {
-    border-image:  url("${dataURI}") ${viewsize} /  ${viewsize / 2}px / 0 round;
-    border-width:  ${viewsize / 2}px;
+    border-image:  url("${dataURI}") ${viewsize} /  ${viewsize}px / 0 round;
+    border-width:  ${viewsize}px;
     border-style:  solid;
 }`;
   style.sheet.insertRule(css);
