@@ -89,6 +89,10 @@ body {
 }
 @keyframes flash {
   0% {
+    filter: drop-shadow(1px 1px 0px rgb(107, 117, 147));
+    transform: translateY(0px);
+  }
+  10% {
     filter: drop-shadow(1px 1px 15px rgb(107, 117, 147));
     transform: translateY(-3px);
   }
