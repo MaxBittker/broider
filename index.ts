@@ -33,7 +33,7 @@ scaleElement.addEventListener('click', () => {
   renderCanvas.width = tileSize * pixelRatio * 3;
   renderCanvas.height = tileSize * pixelRatio * 3;
   renderMap(map, pixelRatio);
-  setBorder(pixelRatio);
+  setBorder(map, pixelRatio);
   updateFrameHeight();
 });
 function updateFrameHeight() {
@@ -86,7 +86,7 @@ function popUndo() {
     map = JSON.parse(old);
     cleanMap();
     renderMap(map, pixelRatio);
-    setBorder(pixelRatio);
+    setBorder(map, pixelRatio);
   }
 }
 undoElement.addEventListener('click', e => {
@@ -98,7 +98,7 @@ undoElement.addEventListener('click', e => {
 });
 drawGuide();
 renderMap(map, pixelRatio);
-setBorder(pixelRatio);
+setBorder(map, pixelRatio);
 
 function draw(loc, v) {
   if (isDown) {
@@ -145,7 +145,7 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     draw(loc, v);
   });
   renderMap(map, pixelRatio);
-  window.setTimeout(() => setBorder(pixelRatio), 0);
+  window.setTimeout(() => setBorder(map, pixelRatio), 0);
 };
 
 canvas.addEventListener('mousedown', e => {
