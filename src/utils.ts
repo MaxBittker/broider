@@ -1,4 +1,4 @@
-import { tileSize } from "./state";
+import {tileSize} from './state';
 
 function newCell() {
   let rows = new Array(tileSize).fill(0);
@@ -35,15 +35,12 @@ function rotationSet([x, y], n = 1) {
   let gridSize = 3 * tileSize - 1;
 
   return [
-    [x, y],
-    [gridSize - y, x],
-    [gridSize - x, gridSize - y],
-    [y, gridSize - x]
+    [x, y], [gridSize - y, x], [gridSize - x, gridSize - y], [y, gridSize - x]
   ];
 }
 function getLoc(map: any[][][][], loc: number[]): number {
   let r = loc.reduce((acc, i) => acc[i], map);
-  if (typeof r !== "number") {
+  if (typeof r !== 'number') {
     return 0;
   } else {
     return r;
@@ -57,12 +54,4 @@ function setLoc(map: any[][][][], loc: any[], v: number = 1) {
   address.reduce((acc, i) => acc[i], map)[lastPos] = v;
 }
 
-export {
-  newGrid,
-  randomLoc,
-  randomInt,
-  getLoc,
-  setLoc,
-  rotatePair,
-  rotationSet
-};
+export {newGrid, randomLoc, randomInt, getLoc, setLoc, rotatePair, rotationSet};
