@@ -4,6 +4,8 @@ import {editorRatio, tileSize} from './state';
 import {getLoc} from './utils';
 
 let target = <HTMLElement>document.getElementById('target');
+let vectortarget = <HTMLElement>document.getElementById('vector-target');
+
 
 let canvas = <HTMLCanvasElement>document.getElementById('editor');
 let guideCanvas = <HTMLCanvasElement>document.getElementById('guide');
@@ -42,6 +44,7 @@ function renderMap(map, pixelRatio) {
       }
     }
   }
+  renderVector(map, pixelRatio)
 }
 function drawGuide() {
   for (let index = 1; index < 3; index++) {
@@ -82,9 +85,12 @@ function drawGuide() {
   guideCtx.stroke();
 }
 
-function setBorder(pixelRatio) {
-  let dataURI = renderCanvas.toDataURL();
+function setBorder(map, pixelRatio) {
+  let dataURI2 = renderCanvas.toDataURL();
+  let dataURI = renderVector(map, pixelRatio);
 
+  console.log(dataURI.length);
+  console.log(dataURI2.length);
   let style = <HTMLStyleElement>document.getElementById('border-style');
   if (style) style.remove();
   style = document.createElement('style');
@@ -98,10 +104,61 @@ function setBorder(pixelRatio) {
     border-style:  solid;
 }`;
   style.sheet.insertRule(css);
+  44
   target.textContent = css;
+}
+function svgToDataURL(svgStr) {
+  const encoded =
+      encodeURIComponent(svgStr).replace(/'/g, '%27').replace(/"/g, '%22')
+
+  const header = 'data:image/svg+xml,'
+  const dataUrl = header + encoded
+  return dataUrl
 }
 
 
+function renderVector(map, pixelRatio) {
+  let content = `<svg 
+      width="${tileSize * pixelRatio * 3}px"
+      height="${tileSize * pixelRatio * 3}px"
+      viewBox="0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio * 3}" 
+      fill="red"
+      stroke="none"
+      xmlns="http://www.w3.org/2000/svg"
+      >`;
+  for (let sx = 0; sx < 3; sx++) {
+    for (let sy = 0; sy < 3; sy++) {
+      for (let cx = 0; cx < tileSize; cx++) {
+        for (let cy = 0; cy < tileSize; cy++) {
+          let v = getLoc(map, [sx, sy, cx, cy]);
+
+          let gridX = (sx * tileSize + cx) * pixelRatio;
+          let gridY = (sy * tileSize + cy) * pixelRatio;
+
+          if (sx == 1 && sy == 1) {
+            continue;
+          }
+
+          if (v == 1) {
+            content += `<rect x="${gridX}" y="${gridY}" width="${
+                pixelRatio}px" height="${pixelRatio}px"/>`;
+          }
+        }
+      }
+    }
+  }
+  // console.log(content)
+  content += '</svg>';
+  vectortarget.innerHTML = content;
+  let dataURI = svgToDataURL(content);
+  return dataURI
+
+  // vector.setAttribute(
+  // 'viewBox',
+  // `0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio *
+  // 3}`);
+  // vector.innerHTML = content;
+}
 function renderHover(map: any[][][][], loc: number[]) {
   let x = loc[0] * tileSize + loc[2];
   let y = loc[1] * tileSize + loc[3];
