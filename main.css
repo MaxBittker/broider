@@ -139,7 +139,30 @@ pre {
   grid-column-gap: 8px;
   grid-row-gap: 8px;
 }
-
+#color {
+  background-color: transparent;
+  box-sizing: content-box;
+  height: 66px;
+  width: 66px;
+  border-image-width: 7px;
+  border-width: 7px;
+  padding: 0px;
+  justify-self: start;
+  align-self: flex-end;
+}
+input[type="color"] {
+  -webkit-appearance: none;
+  /* border: none; */
+  width: 32px;
+  height: 32px;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0px;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  /* border-radius: 1px; */
+}
 @media only screen and (max-width: 700px) {
   .desktop {
     display: none !important;
@@ -152,6 +175,13 @@ pre {
     position: fixed;
     right: 1000px;
   }
+  .blurb {
+    grid-area: 1/2/2/4 !important;
+  }
+}
+
+.blurb {
+  grid-area: 1/2/2/3;
 }
 
 @media only screen and (max-width: 600px) {

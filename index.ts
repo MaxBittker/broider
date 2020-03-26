@@ -8,8 +8,11 @@ import {getLoc, newGrid, rotationSet, setLoc} from './src/utils';
 let penElement = <HTMLElement>document.getElementById('pen');
 let eraserElement = <HTMLElement>document.getElementById('eraser');
 let symmetryElement = <HTMLElement>document.getElementById('symmetry');
-let scaleElement = <HTMLImageElement>document.getElementById('scale');
 let undoElement = <HTMLImageElement>document.getElementById('undo');
+let scaleElement = <HTMLImageElement>document.getElementById('scale');
+
+let colorPicker = <HTMLInputElement>document.getElementById('color');
+
 
 let frame = <HTMLElement>document.getElementById('editor-frame');
 let canvas = <HTMLCanvasElement>document.getElementById('editor');
@@ -36,6 +39,15 @@ scaleElement.addEventListener('click', () => {
   setBorder(pixelRatio);
   updateFrameHeight();
 });
+
+window.paintColor = '#000';
+colorPicker.addEventListener('input', (e) => {
+  window.paintColor = e.target.value;
+  renderMap(map, pixelRatio);
+  setBorder(pixelRatio);
+})
+
+
 function updateFrameHeight() {
   frame.style.height = canvas.getBoundingClientRect().width + 'px';
 }

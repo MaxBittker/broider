@@ -12,6 +12,7 @@ var ctx = canvas.getContext('2d');
 var guideCtx = guideCanvas.getContext('2d');
 var renderCtx = renderCanvas.getContext('2d');
 
+
 renderCtx.imageSmoothingEnabled = false;
 function cleanMap() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -25,8 +26,8 @@ function renderMap(map, pixelRatio) {
         for (let cy = 0; cy < tileSize; cy++) {
           let v = getLoc(map, [sx, sy, cx, cy]);
 
-          ctx.fillStyle = v == 1 ? '#000' : '#fff0';
-          renderCtx.fillStyle = v == 1 ? '#000' : '#fff0';
+          ctx.fillStyle = v == 1 ? window.paintColor : '#fff0';
+          renderCtx.fillStyle = v == 1 ? window.paintColor : '#fff0';
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
           if (sx == 1 && sy == 1) {
