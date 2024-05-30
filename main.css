@@ -99,6 +99,28 @@ body {
   bottom: 4px;
 }
 
+#gallery {
+  display: grid;
+  margin-top: 8px;
+  grid-template-columns: 50% 50%;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
+
+}
+
+.gallery-line {
+  overflow: hidden;
+  position: relative;
+
+}
+
+.gallery-line:after {
+  content: attr(data-after);
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
+
 @keyframes flash {
   0% {
     filter: drop-shadow(1px 1px 0px rgb(107, 117, 147));

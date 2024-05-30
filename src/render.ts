@@ -194,7 +194,7 @@ function copyTarget() {
 function galleryLineString(dataURI: string, title: string, pixelRatio: number) {
 
   let viewsize = tileSize * pixelRatio;
-  let styles = `border-image:  url('${dataURI}') ${viewsize} /  ${viewsize}px / 0 round; border-width:  ${viewsize}px; border-style:  solid; `
+  let styles = `border-image:  url('${dataURI}') ${viewsize} /  ${viewsize}px / 0 round;\n    border-width:  ${viewsize}px;\n    border-style:  solid; `
   let css = `.${title} {
     ${styles}
   }`;
