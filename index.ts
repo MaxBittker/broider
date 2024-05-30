@@ -1,9 +1,9 @@
 import onePng from './assets/1.png';
 import twoPng from './assets/2.png';
 import fourPng from './assets/4.png';
-import {cleanMap, drawGuide, renderHover, renderMap, setBorder} from './src/render';
-import {editorRatio, tileSize} from './src/state';
-import {getLoc, newGrid, rotationSet, setLoc} from './src/utils';
+import { cleanMap, drawGuide, renderHover, renderMap, setBorder } from './src/render';
+import { editorRatio, tileSize } from './src/state';
+import { getLoc, newGrid, rotationSet, setLoc } from './src/utils';
 
 let penElement = <HTMLElement>document.getElementById('pen');
 let eraserElement = <HTMLElement>document.getElementById('eraser');
@@ -36,7 +36,7 @@ scaleElement.addEventListener('click', () => {
   renderCanvas.width = tileSize * pixelRatio * 3;
   renderCanvas.height = tileSize * pixelRatio * 3;
   renderMap(map, pixelRatio);
-  setBorder(map, pixelRatio);
+  setBorder(pixelRatio);
   updateFrameHeight();
 });
 
@@ -98,7 +98,7 @@ function popUndo() {
     map = JSON.parse(old);
     cleanMap();
     renderMap(map, pixelRatio);
-    setBorder(map, pixelRatio);
+    setBorder(pixelRatio);
   }
 }
 undoElement.addEventListener('click', e => {
@@ -110,7 +110,7 @@ undoElement.addEventListener('click', e => {
 });
 drawGuide();
 renderMap(map, pixelRatio);
-setBorder(map, pixelRatio);
+setBorder(pixelRatio);
 
 function draw(loc, v) {
   if (isDown) {
@@ -118,7 +118,7 @@ function draw(loc, v) {
   }
 }
 let handleEvent = (e, isClick = false, isHover = false) => {
-  let {left, top, width, height} = canvas.getBoundingClientRect();
+  let { left, top, width, height } = canvas.getBoundingClientRect();
   let x = e.clientX - left;
   let y = e.clientY - top;
   let canvasX = (x / width) * canvas.width;
@@ -127,7 +127,7 @@ let handleEvent = (e, isClick = false, isHover = false) => {
   let gridY = Math.floor(canvasY / editorRatio);
 
   let rotatePairs =
-      rotationalSymmetry ? rotationSet([gridX, gridY]) : [[gridX, gridY]];
+    rotationalSymmetry ? rotationSet([gridX, gridY]) : [[gridX, gridY]];
 
   cleanMap();
   // renderMap(map,pixelRatio);
@@ -157,7 +157,7 @@ let handleEvent = (e, isClick = false, isHover = false) => {
     draw(loc, v);
   });
   renderMap(map, pixelRatio);
-  window.setTimeout(() => setBorder(map, pixelRatio), 0);
+  window.setTimeout(() => setBorder(pixelRatio), 0);
 };
 
 canvas.addEventListener('mousedown', e => {

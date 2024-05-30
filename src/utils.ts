@@ -1,4 +1,4 @@
-import {tileSize} from './state';
+import { tileSize } from './state';
 
 function newCell() {
   let rows = new Array(tileSize).fill(0);
@@ -12,7 +12,7 @@ function newGrid() {
   });
 }
 
-function randomInt(amin, amax?: number) {
+function randomInt(amin: number, amax?: number) {
   var min = amin;
   var max = amax;
   if (arguments.length == 1) {
@@ -54,4 +54,4 @@ function setLoc(map: any[][][][], loc: any[], v: number = 1) {
   address.reduce((acc, i) => acc[i], map)[lastPos] = v;
 }
 
-export {newGrid, randomLoc, randomInt, getLoc, setLoc, rotatePair, rotationSet};
+export { newGrid, randomLoc, randomInt, getLoc, setLoc, rotatePair, rotationSet };

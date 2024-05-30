@@ -1,18 +1,22 @@
 import copy from 'copy-to-clipboard';
 
-import {editorRatio, tileSize} from './state';
-import {getLoc} from './utils';
+import { editorRatio, tileSize } from './state';
+import { getLoc } from './utils';
 
 let target = <HTMLElement>document.getElementById('target');
-let vectortarget = <HTMLElement>document.getElementById('vector-target');
 
 
-let canvas = <HTMLCanvasElement>document.getElementById('editor');
-let guideCanvas = <HTMLCanvasElement>document.getElementById('guide');
-let renderCanvas = <HTMLCanvasElement>document.getElementById('render');
-var ctx = canvas.getContext('2d');
-var guideCtx = guideCanvas.getContext('2d');
-var renderCtx = renderCanvas.getContext('2d');
+// let vectortarget = <HTMLElement>document.getElementById('vector-target');
+
+
+let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('editor');
+let guideCanvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('guide');
+let renderCanvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('render');
+var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+var guideCtx = guideCanvas.getContext('2d') as CanvasRenderingContext2D;
+var renderCtx = renderCanvas.getContext('2d') as CanvasRenderingContext2D;
+
+
 
 
 renderCtx.imageSmoothingEnabled = false;
@@ -44,7 +48,7 @@ function renderMap(map, pixelRatio) {
       }
     }
   }
-  renderVector(map, pixelRatio)
+  // renderVector(map, pixelRatio)
 }
 function drawGuide() {
   for (let index = 1; index < 3; index++) {
@@ -85,12 +89,12 @@ function drawGuide() {
   guideCtx.stroke();
 }
 
-function setBorder(map, pixelRatio) {
-  let dataURI2 = renderCanvas.toDataURL();
-  let dataURI = renderVector(map, pixelRatio);
+function setBorder(pixelRatio) {
+  let dataURI = renderCanvas.toDataURL();
+  // let dataURI2 = renderVector(map, pixelRatio);
 
-  console.log(dataURI.length);
-  console.log(dataURI2.length);
+  // console.log(dataURI.length);
+  // console.log(dataURI2.length);
   let style = <HTMLStyleElement>document.getElementById('border-style');
   if (style) style.remove();
   style = document.createElement('style');
@@ -104,12 +108,11 @@ function setBorder(map, pixelRatio) {
     border-style:  solid;
 }`;
   style.sheet.insertRule(css);
-  44
   target.textContent = css;
 }
 function svgToDataURL(svgStr) {
   const encoded =
-      encodeURIComponent(svgStr).replace(/'/g, '%27').replace(/"/g, '%22')
+    encodeURIComponent(svgStr).replace(/'/g, '%27').replace(/"/g, '%22')
 
   const header = 'data:image/svg+xml,'
   const dataUrl = header + encoded
@@ -117,48 +120,47 @@ function svgToDataURL(svgStr) {
 }
 
 
-function renderVector(map, pixelRatio) {
-  let content = `<svg 
-      width="${tileSize * pixelRatio * 3}px"
-      height="${tileSize * pixelRatio * 3}px"
-      viewBox="0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio * 3}" 
-      fill="red"
-      stroke="none"
-      xmlns="http://www.w3.org/2000/svg"
-      >`;
-  for (let sx = 0; sx < 3; sx++) {
-    for (let sy = 0; sy < 3; sy++) {
-      for (let cx = 0; cx < tileSize; cx++) {
-        for (let cy = 0; cy < tileSize; cy++) {
-          let v = getLoc(map, [sx, sy, cx, cy]);
+// function renderVector(map, pixelRatio) {
+//   let content = `<svg 
+//       width="${tileSize * pixelRatio * 3}px"
+//       height="${tileSize * pixelRatio * 3}px"
+//       viewBox="0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio * 3}" 
+//       fill="red"
+//       stroke="none"
+//       xmlns="http://www.w3.org/2000/svg"
+//       >`;
+//   for (let sx = 0; sx < 3; sx++) {
+//     for (let sy = 0; sy < 3; sy++) {
+//       for (let cx = 0; cx < tileSize; cx++) {
+//         for (let cy = 0; cy < tileSize; cy++) {
+//           let v = getLoc(map, [sx, sy, cx, cy]);
 
-          let gridX = (sx * tileSize + cx) * pixelRatio;
-          let gridY = (sy * tileSize + cy) * pixelRatio;
+//           let gridX = (sx * tileSize + cx) * pixelRatio;
+//           let gridY = (sy * tileSize + cy) * pixelRatio;
 
-          if (sx == 1 && sy == 1) {
-            continue;
-          }
+//           if (sx == 1 && sy == 1) {
+//             continue;
+//           }
 
-          if (v == 1) {
-            content += `<rect x="${gridX}" y="${gridY}" width="${
-                pixelRatio}px" height="${pixelRatio}px"/>`;
-          }
-        }
-      }
-    }
-  }
-  // console.log(content)
-  content += '</svg>';
-  vectortarget.innerHTML = content;
-  let dataURI = svgToDataURL(content);
-  return dataURI
+//           if (v == 1) {
+//             content += `<rect x="${gridX}" y="${gridY}" width="${pixelRatio}px" height="${pixelRatio}px"/>`;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   // console.log(content)
+//   content += '</svg>';
+//   // vectortarget.innerHTML = content;
+//   let dataURI = svgToDataURL(content);
+//   return dataURI
 
-  // vector.setAttribute(
-  // 'viewBox',
-  // `0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio *
-  // 3}`);
-  // vector.innerHTML = content;
-}
+//   // vector.setAttribute(
+//   // 'viewBox',
+//   // `0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio *
+//   // 3}`);
+//   // vector.innerHTML = content;
+// }
 function renderHover(map: any[][][][], loc: number[]) {
   let x = loc[0] * tileSize + loc[2];
   let y = loc[1] * tileSize + loc[3];
@@ -167,8 +169,8 @@ function renderHover(map: any[][][][], loc: number[]) {
     return;
   }
   ctx.fillRect(
-      x * editorRatio + 0, y * editorRatio + 0, editorRatio - 0,
-      editorRatio - 0);
+    x * editorRatio + 0, y * editorRatio + 0, editorRatio - 0,
+    editorRatio - 0);
 }
 
 target.addEventListener('click', copyTarget);
@@ -178,7 +180,7 @@ function resetCopy() {
 
 resetCopy();
 function copyTarget() {
-  copy(target.textContent, {message: 'Press #{key} to copy css'});
+  copy(target.textContent, { message: 'Press #{key} to copy css' });
   target.setAttribute('data-after', 'Copied to your clipboard!');
   target.classList.remove('flash');
 
@@ -187,4 +189,4 @@ function copyTarget() {
   }, 1);
   window.setTimeout(resetCopy, 2500);
 }
-export {renderMap, drawGuide, setBorder, renderHover, cleanMap};
+export { renderMap, drawGuide, setBorder, renderHover, cleanMap };
