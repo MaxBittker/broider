@@ -12,21 +12,6 @@ function newGrid() {
   });
 }
 
-function randomInt(amin: number, amax?: number) {
-  var min = amin;
-  var max = amax;
-  if (arguments.length == 1) {
-    min = 0;
-    max = amin;
-  }
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function randomLoc() {
-  return [randomInt(3), randomInt(3), randomInt(tileSize), randomInt(tileSize)];
-}
 function rotatePair([x, y]) {
   let gridSize = 3 * tileSize;
   return [gridSize - y, x];
@@ -54,4 +39,4 @@ function setLoc(map: any[][][][], loc: any[], v: number = 1) {
   address.reduce((acc, i) => acc[i], map)[lastPos] = v;
 }
 
-export { newGrid, randomLoc, randomInt, getLoc, setLoc, rotatePair, rotationSet };
+export { newGrid, getLoc, setLoc, rotatePair, rotationSet };
