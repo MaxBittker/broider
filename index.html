@@ -26,25 +26,34 @@
     <input class="broider desktop" type="color" id="color" name="head" value="#000" style="grid-area: 1/3/1/3;" />
     <canvas id="render"></canvas>
 
-    <div id="vector-target"></div>
 
     <pre id="target" class="broider desktop" style="grid-area: 2/1/3/3;"></pre>
     <div class="broider blurb">
       This a tool for making "9-patch" borders.
       <br />
-      Draw on the grid above to design your pattern.
       <br />
+
+      You can copy the css below to use with your own
+      sites!
     </div>
     <div class="broider desktop" style="grid-area: 2/3/4/3; display: flex; overflow: hidden; padding:1px; ">
       <div class="broider desktop" style="display: flex; flex-grow: 1"></div>
     </div>
-    <div class="broider desktop" style="grid-area:3/2/4/3">
-      When you're done, you can copy the css above to use with your own
-      sites!<br />
-      <br />
-      made by <a href="https://maxbittker.com">max bittker</a>
+    <div class="broider " style="grid-area:3/2/4/3">
+      <input type="text" id="title" placeholder="title" class=" "
+        style="width: 60%;  padding: 0.5em;background-color:transparent;border:none;" />
+      <button style="background-color:transparent; border:none; cursor:pointer;" id="submit">
+        [submit to gallery]</button>
     </div>
   </div>
+
+  <div id="gallery">
+    <div class="gallery-line">
+      loading
+    </div>
+
+  </div>
+
 </body>
 <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
 <noscript><img src="https://api.simpleanalytics.io/hello.gif" alt="" /></noscript>

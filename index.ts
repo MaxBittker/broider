@@ -4,7 +4,7 @@ import fourPng from './assets/4.png';
 import { cleanMap, drawGuide, renderHover, renderMap, setBorder } from './src/render';
 import { editorRatio, tileSize } from './src/state';
 import { getLoc, newGrid, rotationSet, setLoc } from './src/utils';
-
+import { setupGallery } from './src/gallery';
 let penElement = <HTMLElement>document.getElementById('pen');
 let eraserElement = <HTMLElement>document.getElementById('eraser');
 let symmetryElement = <HTMLElement>document.getElementById('symmetry');
@@ -29,12 +29,15 @@ let pngList = [onePng, twoPng, fourPng];
 let pixelRatio = sizeList[sizeIndex];
 renderCanvas.width = tileSize * pixelRatio * 3;
 renderCanvas.height = tileSize * pixelRatio * 3;
+renderCanvas.dataset.pixelRatio = pixelRatio.toString();
+
 scaleElement.addEventListener('click', () => {
   sizeIndex = (sizeIndex + 1) % sizeList.length;
   scaleElement.src = pngList[sizeIndex];
   pixelRatio = sizeList[sizeIndex];
   renderCanvas.width = tileSize * pixelRatio * 3;
   renderCanvas.height = tileSize * pixelRatio * 3;
+  renderCanvas.dataset.pixelRatio = pixelRatio.toString();
   renderMap(map, pixelRatio);
   setBorder(pixelRatio);
   updateFrameHeight();
@@ -215,3 +218,5 @@ window.addEventListener('touchend', e => {
   isDown = false;
   lastTouchEnd = e.timeStamp;
 });
+
+setupGallery();

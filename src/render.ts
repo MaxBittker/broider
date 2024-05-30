@@ -110,14 +110,14 @@ function setBorder(pixelRatio) {
   style.sheet.insertRule(css);
   target.textContent = css;
 }
-function svgToDataURL(svgStr) {
-  const encoded =
-    encodeURIComponent(svgStr).replace(/'/g, '%27').replace(/"/g, '%22')
+// function svgToDataURL(svgStr) {
+//   const encoded =
+//     encodeURIComponent(svgStr).replace(/'/g, '%27').replace(/"/g, '%22')
 
-  const header = 'data:image/svg+xml,'
-  const dataUrl = header + encoded
-  return dataUrl
-}
+//   const header = 'data:image/svg+xml,'
+//   const dataUrl = header + encoded
+//   return dataUrl
+// }
 
 
 // function renderVector(map, pixelRatio) {
@@ -189,4 +189,22 @@ function copyTarget() {
   }, 1);
   window.setTimeout(resetCopy, 2500);
 }
-export { renderMap, drawGuide, setBorder, renderHover, cleanMap };
+
+
+function galleryLineString(dataURI: string, title: string, pixelRatio: number) {
+
+  let viewsize = tileSize * pixelRatio;
+  let styles = `border-image:  url('${dataURI}') ${viewsize} /  ${viewsize}px / 0 round; border-width:  ${viewsize}px; border-style:  solid; `
+  let css = `.${title} {
+    ${styles}
+  }`;
+
+  let html = `
+<pre class="gallery-line" data-after="[Click to copy]" style="${styles}">
+  ${css}
+</pre>
+  `
+  return html
+}
+
+export { renderMap, drawGuide, setBorder, renderHover, cleanMap, galleryLineString };
