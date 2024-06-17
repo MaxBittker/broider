@@ -195,13 +195,13 @@ function copyTarget() {
 
 function galleryLineString(dataURI: string, title: string, pixelRatio: number) {
   const viewsize = tileSize * pixelRatio;
-  const escapedDataURI = dataURI.replace(/'/g, "&#39;");
+  const escapedDataURI = encodeURI(dataURI);
   const styles = `border-image:  url('${escapedDataURI}') ${viewsize} /  ${viewsize}px / 0 round;\n    border-width:  ${viewsize}px;\n    border-style:  solid; `;
-  const escapedTitle = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const escapedTitle = escapeHtml(title);
   const css = `.${escapedTitle} {\n    ${styles}\n  }`;
 
-  const escapedStyles = styles.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const escapedCSS = css.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const escapedStyles = escapeHtml(styles);
+  const escapedCSS = escapeHtml(css);
 
   const html = `
 <pre class="gallery-line" data-after="[Click to copy]" style="${escapedStyles}">
@@ -211,11 +211,20 @@ function galleryLineString(dataURI: string, title: string, pixelRatio: number) {
   return html;
 }
 
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export {
+  cleanMap,
   renderMap,
   drawGuide,
   setBorder,
   renderHover,
-  cleanMap,
   galleryLineString,
 };

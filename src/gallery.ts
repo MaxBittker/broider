@@ -31,7 +31,6 @@ interface submission {
 let submissions: submission[] = [];
 
 async function fetchSubmissions() {
-  console.log("fetching submissions");
   //fetch posts from:
   // https://maxbittker-broider.web.val.run/
   let data = await fetch("https://maxbittker-broider.web.val.run/").then(
