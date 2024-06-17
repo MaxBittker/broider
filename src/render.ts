@@ -1,23 +1,24 @@
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard";
 
-import { editorRatio, tileSize } from './state';
-import { getLoc } from './utils';
+import { editorRatio, tileSize } from "./state";
+import { getLoc } from "./utils";
 
-let target = <HTMLElement>document.getElementById('target');
-
+let target = <HTMLElement>document.getElementById("target");
 
 // let vectortarget = <HTMLElement>document.getElementById('vector-target');
 
-
-let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('editor');
-let guideCanvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('guide');
-let renderCanvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('render');
-var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-var guideCtx = guideCanvas.getContext('2d') as CanvasRenderingContext2D;
-var renderCtx = renderCanvas.getContext('2d') as CanvasRenderingContext2D;
-
-
-
+let canvas: HTMLCanvasElement = <HTMLCanvasElement>(
+  document.getElementById("editor")
+);
+let guideCanvas: HTMLCanvasElement = <HTMLCanvasElement>(
+  document.getElementById("guide")
+);
+let renderCanvas: HTMLCanvasElement = <HTMLCanvasElement>(
+  document.getElementById("render")
+);
+var ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+var guideCtx = guideCanvas.getContext("2d") as CanvasRenderingContext2D;
+var renderCtx = renderCanvas.getContext("2d") as CanvasRenderingContext2D;
 
 renderCtx.imageSmoothingEnabled = false;
 function cleanMap() {
@@ -32,8 +33,8 @@ function renderMap(map, pixelRatio) {
         for (let cy = 0; cy < tileSize; cy++) {
           let v = getLoc(map, [sx, sy, cx, cy]);
 
-          ctx.fillStyle = v == 1 ? window.paintColor : '#fff0';
-          renderCtx.fillStyle = v == 1 ? window.paintColor : '#fff0';
+          ctx.fillStyle = v == 1 ? window.paintColor : "#fff0";
+          renderCtx.fillStyle = v == 1 ? window.paintColor : "#fff0";
           let gridX = (sx * tileSize + cx) * pixelRatio;
           let gridY = (sy * tileSize + cy) * pixelRatio;
           if (sx == 1 && sy == 1) {
@@ -52,7 +53,7 @@ function renderMap(map, pixelRatio) {
 }
 function drawGuide() {
   for (let index = 1; index < 3; index++) {
-    guideCtx.strokeStyle = '#33f';
+    guideCtx.strokeStyle = "#33f";
     guideCtx.lineWidth = 0.5;
     let x = (index * canvas.width) / 3;
     guideCtx.beginPath();
@@ -66,7 +67,7 @@ function drawGuide() {
   }
 
   for (let index = 0.0; index < 3 * tileSize; index++) {
-    guideCtx.strokeStyle = '#ccc';
+    guideCtx.strokeStyle = "#ccc";
     let x = (index * canvas.width) / (3 * tileSize);
     guideCtx.beginPath();
     guideCtx.moveTo(x, 0);
@@ -95,10 +96,10 @@ function setBorder(pixelRatio) {
 
   // console.log(dataURI.length);
   // console.log(dataURI2.length);
-  let style = <HTMLStyleElement>document.getElementById('border-style');
+  let style = <HTMLStyleElement>document.getElementById("border-style");
   if (style) style.remove();
-  style = document.createElement('style');
-  style.id = 'border-style';
+  style = document.createElement("style");
+  style.id = "border-style";
   document.head.appendChild(style);
 
   let viewsize = tileSize * pixelRatio;
@@ -119,12 +120,11 @@ function setBorder(pixelRatio) {
 //   return dataUrl
 // }
 
-
 // function renderVector(map, pixelRatio) {
-//   let content = `<svg 
+//   let content = `<svg
 //       width="${tileSize * pixelRatio * 3}px"
 //       height="${tileSize * pixelRatio * 3}px"
-//       viewBox="0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio * 3}" 
+//       viewBox="0 0 ${tileSize * pixelRatio * 3} ${tileSize * pixelRatio * 3}"
 //       fill="red"
 //       stroke="none"
 //       xmlns="http://www.w3.org/2000/svg"
@@ -164,47 +164,58 @@ function setBorder(pixelRatio) {
 function renderHover(map: any[][][][], loc: number[]) {
   let x = loc[0] * tileSize + loc[2];
   let y = loc[1] * tileSize + loc[3];
-  ctx.fillStyle = getLoc(map, loc) == 1 ? '#dde' : '#dde';
+  ctx.fillStyle = getLoc(map, loc) == 1 ? "#dde" : "#dde";
   if (loc[0] == 1 && loc[1] == 1) {
     return;
   }
   ctx.fillRect(
-    x * editorRatio + 0, y * editorRatio + 0, editorRatio - 0,
-    editorRatio - 0);
+    x * editorRatio + 0,
+    y * editorRatio + 0,
+    editorRatio - 0,
+    editorRatio - 0
+  );
 }
 
-target.addEventListener('click', copyTarget);
+target.addEventListener("click", copyTarget);
 function resetCopy() {
-  target.setAttribute('data-after', '[Click to copy]');
+  target.setAttribute("data-after", "[Click to copy]");
 }
 
 resetCopy();
 function copyTarget() {
-  copy(target.textContent, { message: 'Press #{key} to copy css' });
-  target.setAttribute('data-after', 'Copied to your clipboard!');
-  target.classList.remove('flash');
+  copy(target.textContent, { message: "Press #{key} to copy css" });
+  target.setAttribute("data-after", "Copied to your clipboard!");
+  target.classList.remove("flash");
 
   window.setTimeout(() => {
-    target.classList.add('flash');
+    target.classList.add("flash");
   }, 1);
   window.setTimeout(resetCopy, 2500);
 }
 
-
 function galleryLineString(dataURI: string, title: string, pixelRatio: number) {
+  const viewsize = tileSize * pixelRatio;
+  const escapedDataURI = dataURI.replace(/'/g, "&#39;");
+  const styles = `border-image:  url('${escapedDataURI}') ${viewsize} /  ${viewsize}px / 0 round;\n    border-width:  ${viewsize}px;\n    border-style:  solid; `;
+  const escapedTitle = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const css = `.${escapedTitle} {\n    ${styles}\n  }`;
 
-  let viewsize = tileSize * pixelRatio;
-  let styles = `border-image:  url('${dataURI}') ${viewsize} /  ${viewsize}px / 0 round;\n    border-width:  ${viewsize}px;\n    border-style:  solid; `
-  let css = `.${title} {
-    ${styles}
-  }`;
+  const escapedStyles = styles.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const escapedCSS = css.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  let html = `
-<pre class="gallery-line" data-after="[Click to copy]" style="${styles}">
-  ${css}
+  const html = `
+<pre class="gallery-line" data-after="[Click to copy]" style="${escapedStyles}">
+  ${escapedCSS}
 </pre>
-  `
-  return html
+  `;
+  return html;
 }
 
-export { renderMap, drawGuide, setBorder, renderHover, cleanMap, galleryLineString };
+export {
+  renderMap,
+  drawGuide,
+  setBorder,
+  renderHover,
+  cleanMap,
+  galleryLineString,
+};
