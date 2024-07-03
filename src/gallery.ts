@@ -1,5 +1,6 @@
 import copy from "copy-to-clipboard";
 import { galleryLineString } from "./render";
+import { loadSubmissionIntoEditor } from '../index';
 
 function to_css_class(string: string): string {
   // Convert to lowercase
@@ -22,7 +23,7 @@ let renderCanvas: HTMLCanvasElement = <HTMLCanvasElement>(
   document.getElementById("render")
 );
 
-interface submission {
+export interface submission {
   dataUrl: string;
   title: string;
   pixelRatio: number;
@@ -71,18 +72,21 @@ submit!.addEventListener("click", () => {
   postSubmission(submissions[submissions.length - 1]);
   setupGallery();
 });
-
 function setupGallery() {
-  let submissionHTMLs = submissions.map((submission) => {
+  let submissionHTMLs = submissions.map((submission, index) => {
     return galleryLineString(
       submission.dataUrl,
       submission.title,
-      submission.pixelRatio
+      submission.pixelRatio,
+      index
     );
   });
   gallery!.innerHTML = submissionHTMLs.join("");
   document.querySelectorAll(".gallery-line").forEach((line) => {
-    line.addEventListener("click", () => {
+    line.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const index = parseInt(target.dataset.index);
+      loadSubmissionIntoEditor(submissions[index]);
       copy(line.textContent);
       line.setAttribute("data-after", "Copied to your clipboard!");
       line.classList.remove("flash");
@@ -95,5 +99,6 @@ function setupGallery() {
     });
   });
 }
+
 
 export { setupGallery };

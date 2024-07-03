@@ -1,10 +1,11 @@
 import onePng from './assets/1.png';
 import twoPng from './assets/2.png';
 import fourPng from './assets/4.png';
+import { hexToRgb } from './src/utils';
 import { cleanMap, drawGuide, renderHover, renderMap, setBorder } from './src/render';
 import { editorRatio, tileSize } from './src/state';
 import { getLoc, newGrid, rotationSet, setLoc } from './src/utils';
-import { setupGallery } from './src/gallery';
+import { setupGallery, submission } from './src/gallery';
 let penElement = <HTMLElement>document.getElementById('pen');
 let eraserElement = <HTMLElement>document.getElementById('eraser');
 let symmetryElement = <HTMLElement>document.getElementById('symmetry');
@@ -220,3 +221,70 @@ window.addEventListener('touchend', e => {
 });
 
 setupGallery();
+
+export function loadSubmissionIntoEditor(submission: submission) {
+  // Set pixel ratio
+  sizeIndex = sizeList.indexOf(submission.pixelRatio);
+  if (sizeIndex === -1) sizeIndex = 0;
+  scaleElement.src = pngList[sizeIndex];
+  pixelRatio = sizeList[sizeIndex];
+  renderCanvas.width = tileSize * pixelRatio * 3;
+  renderCanvas.height = tileSize * pixelRatio * 3;
+  renderCanvas.dataset.pixelRatio = pixelRatio.toString();
+
+  // Load image data
+  const img = new Image();
+  img.onload = () => {
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(img, 0, 0);
+    const imageData = tempCtx.getImageData(0, 0, img.width, img.height);
+
+    // Clear existing map
+    map = newGrid();
+
+    // Set color (assuming non-transparent pixels are the same color)
+    let color = null;
+
+    // Read pixel data and set locations
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        const i = (y * img.width + x) * 4;
+        const r = imageData.data[i];
+        const g = imageData.data[i + 1];
+        const b = imageData.data[i + 2];
+        const a = imageData.data[i + 3];
+
+        if (a > 0) {
+          const sx = Math.floor(x / (tileSize * pixelRatio));
+          const sy = Math.floor(y / (tileSize * pixelRatio));
+          const cx = Math.floor((x % (tileSize * pixelRatio)) / pixelRatio);
+          const cy = Math.floor((y % (tileSize * pixelRatio)) / pixelRatio);
+
+          setLoc(map, [sx, sy, cx, cy], 1);
+
+          if (!color) {
+            color = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+          }
+        }
+      }
+    }
+
+    // Set color if found
+    if (color) {
+      window.paintColor = color;
+      colorPicker.value = color;
+    }
+
+    // Render updated map
+    cleanMap();
+    renderMap(map, pixelRatio);
+    setBorder(pixelRatio);
+    pushUndo();
+  };
+  img.src = submission.dataUrl;
+}
+
+
