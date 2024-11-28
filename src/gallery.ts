@@ -1,6 +1,6 @@
 import copy from "copy-to-clipboard";
 import { galleryLineString } from "./render";
-import { loadSubmissionIntoEditor } from '../index';
+import { loadSubmissionIntoEditor } from "../index";
 
 function to_css_class(string: string): string {
   // Convert to lowercase
@@ -39,7 +39,7 @@ async function fetchSubmissions() {
   );
 
   submissions = data.submissions;
-  console.log(submissions);
+  console.log("submissions", submissions);
   setupGallery();
 }
 
@@ -99,6 +99,5 @@ function setupGallery() {
     });
   });
 }
-
 
 export { setupGallery };

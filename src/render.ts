@@ -193,7 +193,16 @@ function copyTarget() {
   window.setTimeout(resetCopy, 2500);
 }
 
-function galleryLineString(dataURI: string, title: string, pixelRatio: number, index: number) {
+function galleryLineString(
+  dataURI: string,
+  title: string,
+  pixelRatio: number,
+  index: number
+) {
+  if (!dataURI) {
+    return "";
+  }
+
   const viewsize = tileSize * pixelRatio;
   const escapedDataURI = encodeURI(dataURI);
   const styles = `border-image:  url('${escapedDataURI}') ${viewsize} /  ${viewsize}px / 0 round;\n    border-width:  ${viewsize}px;\n    border-style:  solid; `;
@@ -210,7 +219,6 @@ function galleryLineString(dataURI: string, title: string, pixelRatio: number, i
     `;
   return html;
 }
-
 
 function escapeHtml(unsafe: string): string {
   return unsafe
