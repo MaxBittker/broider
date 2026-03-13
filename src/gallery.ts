@@ -21,7 +21,7 @@ let submit = document.getElementById("submit") as HTMLButtonElement;
 let gallery = document.getElementById("gallery") as HTMLDivElement;
 let renderCanvas = document.getElementById("render") as HTMLCanvasElement;
 
-const API_URL = "https://broider-gallery.fly.dev/";
+const API_URL = "https://broider-gallery.max-d68.workers.dev/";
 
 export interface submission {
   dataUrl: string;
@@ -32,23 +32,25 @@ export interface submission {
 let submissions: submission[] = [];
 
 async function fetchSubmissions() {
-  let data = await fetch(API_URL).then((res) => res.json());
-
-  submissions = data.submissions;
-  console.log("submissions", submissions);
-  setupGallery();
+  submissions = [];
+  let cursor: number | null = 0;
+  while (cursor !== null) {
+    const url = cursor ? `${API_URL}?cursor=${cursor}` : API_URL;
+    const data = await fetch(url).then((res) => res.json());
+    submissions.push(...data.submissions);
+    cursor = data.nextCursor;
+    setupGallery(); // render progressively as pages arrive
+  }
 }
 
 async function postSubmission(submission: submission) {
-  let data = await fetch(API_URL, {
+  await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(submission),
-  }).then((res) => res.json());
-  submissions = data.submissions;
-  setupGallery();
+  });
 }
 fetchSubmissions();
 

@@ -1,0 +1,9 @@
+name = "broider-gallery"
+main = "server.ts"
+compatibility_date = "2024-12-01"
+account_id = "d68ebf846127c4c12e1b79fbcd5e4fa4"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "broider-gallery"
+database_id = "3543b4d5-47fe-4ac1-9453-91690ba79db4"
