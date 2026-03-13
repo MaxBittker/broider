@@ -16,12 +16,12 @@ function to_css_class(string: string): string {
   return string;
 }
 
-let title = document.getElementById("title");
-let submit = document.getElementById("submit");
-let gallery = document.getElementById("gallery");
-let renderCanvas: HTMLCanvasElement = <HTMLCanvasElement>(
-  document.getElementById("render")
-);
+let title = document.getElementById("title") as HTMLInputElement;
+let submit = document.getElementById("submit") as HTMLButtonElement;
+let gallery = document.getElementById("gallery") as HTMLDivElement;
+let renderCanvas = document.getElementById("render") as HTMLCanvasElement;
+
+const API_URL = "https://broider-gallery.fly.dev/";
 
 export interface submission {
   dataUrl: string;
@@ -32,11 +32,7 @@ export interface submission {
 let submissions: submission[] = [];
 
 async function fetchSubmissions() {
-  //fetch posts from:
-  // https://maxbittker-broider.web.val.run/
-  let data = await fetch("https://maxbittker-broider.web.val.run/").then(
-    (res) => res.json()
-  );
+  let data = await fetch(API_URL).then((res) => res.json());
 
   submissions = data.submissions;
   console.log("submissions", submissions);
@@ -44,9 +40,7 @@ async function fetchSubmissions() {
 }
 
 async function postSubmission(submission: submission) {
-  //post submission to:
-  // https://maxbittker-broider.web.val.run/
-  let data = await fetch("https://maxbittker-broider.web.val.run/", {
+  let data = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,9 +52,9 @@ async function postSubmission(submission: submission) {
 }
 fetchSubmissions();
 
-submit!.addEventListener("click", () => {
+submit.addEventListener("click", () => {
   let dataURI = renderCanvas.toDataURL();
-  let pixelRatio = parseInt(renderCanvas.dataset.pixelRatio);
+  let pixelRatio = parseInt(renderCanvas.dataset.pixelRatio || "1");
   submissions.push({
     title: to_css_class(title.value),
     dataUrl: dataURI,
@@ -85,9 +79,9 @@ function setupGallery() {
   document.querySelectorAll(".gallery-line").forEach((line) => {
     line.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
-      const index = parseInt(target.dataset.index);
+      const index = parseInt(target.dataset.index || "0");
       loadSubmissionIntoEditor(submissions[index]);
-      copy(line.textContent);
+      copy(line.textContent || "");
       line.setAttribute("data-after", "Copied to your clipboard!");
       line.classList.remove("flash");
       window.setTimeout(() => {
