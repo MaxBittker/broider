@@ -60,43 +60,116 @@ async function isIPBanned(ip: string, db: D1Database): Promise<boolean> {
 }
 
 const ADMIN_HTML = `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Broider Admin</title>
+<title>broider admin</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: monospace; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
-  h1 { margin-bottom: 10px; color: #c4b5fd; }
-  .stats { margin-bottom: 20px; color: #888; }
-  .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-  .tab { padding: 8px 16px; background: #16213e; border: 1px solid #333; cursor: pointer; color: #e0e0e0; }
-  .tab.active { background: #0f3460; border-color: #c4b5fd; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-  .card { background: #16213e; border: 1px solid #333; padding: 10px; position: relative; }
-  .card img { width: 100%; image-rendering: pixelated; background: white; }
-  .card .title { font-size: 12px; margin: 6px 0; word-break: break-all; }
+  * { box-sizing: border-box; font-family: monospace; color: #333; }
+  body {
+    background-color: antiquewhite;
+    max-width: 900px;
+    margin: auto;
+    padding: 8px;
+    filter: drop-shadow(1px 1px 4px rgb(107, 117, 147));
+  }
+  h1 { margin: 8px 0; font-size: 1.4em; }
+  .stats { margin-bottom: 12px; font-size: 0.9em; color: #666; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab {
+    padding: 6px 14px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 1em;
+    color: #666;
+  }
+  .tab.active { color: #333; text-decoration: underline; }
+  .tab:hover { color: #333; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .card {
+    padding: 8px;
+    position: relative;
+    background: rgba(255,255,255,0.3);
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .card img {
+    width: 100%;
+    image-rendering: pixelated;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .card .title { font-size: 12px; margin: 6px 0 2px; word-break: break-all; }
   .card .meta { font-size: 10px; color: #888; }
-  .card .actions { margin-top: 8px; display: flex; gap: 6px; }
-  .card .actions button { padding: 4px 8px; font-size: 11px; cursor: pointer; border: 1px solid #555; font-family: monospace; }
-  .btn-delete { background: #e74c3c; color: white; border-color: #c0392b !important; }
-  .btn-ban { background: #e67e22; color: white; border-color: #d35400 !important; }
+  .card .actions { margin-top: 6px; display: flex; gap: 6px; }
+  .card .actions button {
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: monospace;
+    background: transparent;
+    border: 1px solid #999;
+    color: #333;
+  }
+  .card .actions button:hover { background: rgba(0,0,0,0.05); }
+  .btn-delete { border-color: #c0392b !important; color: #c0392b !important; }
+  .btn-delete:hover { background: #c0392b !important; color: white !important; }
+  .btn-ban { border-color: #d35400 !important; color: #d35400 !important; }
+  .btn-ban:hover { background: #d35400 !important; color: white !important; }
   .ban-list { max-width: 600px; }
-  .ban-row { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: #16213e; border: 1px solid #333; margin-bottom: 4px; }
-  .ban-row button { padding: 4px 8px; font-size: 11px; cursor: pointer; background: #27ae60; color: white; border: 1px solid #1e8449; font-family: monospace; }
+  .ban-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: rgba(255,255,255,0.3);
+    border: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+  .ban-row button {
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: monospace;
+    background: transparent;
+    border: 1px solid #27ae60;
+    color: #27ae60;
+  }
+  .ban-row button:hover { background: #27ae60; color: white; }
   .hidden { display: none; }
   .add-ban { margin-bottom: 16px; display: flex; gap: 8px; }
-  .add-ban input { padding: 6px; font-family: monospace; background: #0a0a1a; border: 1px solid #555; color: #e0e0e0; }
-  .add-ban button { padding: 6px 12px; font-family: monospace; cursor: pointer; background: #e67e22; color: white; border: 1px solid #d35400; }
+  .add-ban input {
+    padding: 6px;
+    font-family: monospace;
+    background: transparent;
+    border: 1px solid #999;
+    color: #333;
+  }
+  .add-ban input::placeholder { color: #999; }
+  .add-ban button {
+    padding: 6px 12px;
+    font-family: monospace;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #d35400;
+    color: #d35400;
+  }
+  .add-ban button:hover { background: #d35400; color: white; }
 </style>
 </head>
 <body>
-<h1>Broider Admin</h1>
+<h1>broider admin</h1>
 <div class="stats" id="stats"></div>
 <div class="tabs">
-  <div class="tab active" onclick="showTab('submissions')">Submissions</div>
-  <div class="tab" onclick="showTab('bans')">IP Bans</div>
+  <div class="tab active" onclick="showTab('submissions')">[submissions]</div>
+  <div class="tab" onclick="showTab('bans')">[ip bans]</div>
 </div>
 
 <div id="submissions-tab">
@@ -107,7 +180,7 @@ const ADMIN_HTML = `<!DOCTYPE html>
   <div class="add-ban">
     <input id="ban-ip" placeholder="IP address">
     <input id="ban-reason" placeholder="Reason (optional)">
-    <button onclick="addBan()">Ban IP</button>
+    <button onclick="addBan()">[ban ip]</button>
   </div>
   <div class="ban-list" id="ban-list"></div>
 </div>
@@ -124,7 +197,7 @@ function api(path, opts) {
 }
 
 function showTab(name) {
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', t.textContent.toLowerCase().includes(name)));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().includes(name)));
   document.getElementById('submissions-tab').classList.toggle('hidden', name !== 'submissions');
   document.getElementById('bans-tab').classList.toggle('hidden', name !== 'bans');
   if (name === 'bans') loadBans();
@@ -141,11 +214,11 @@ async function loadSubmissions() {
       <div class="meta">ID: \${s.id} | IP: \${s.ip || 'unknown'}</div>
       <div class="meta">\${s.created_at}</div>
       <div class="actions">
-        <button class="btn-delete" onclick="del(\${s.id})">Delete</button>
-        \${s.ip ? \`<button class="btn-ban" onclick="banFromSubmission(\${s.id}, '\${s.ip}')">Ban IP</button>\` : ''}
+        <button class="btn-delete" onclick="del(\${s.id})">[delete]</button>
+        \${s.ip ? \`<button class="btn-ban" onclick="banFromSubmission(\${s.id}, '\${s.ip}')">[ban ip]</button>\` : ''}
       </div>
     </div>
-  \`).reverse().join('');
+  \`).join('');
 }
 
 async function del(id) {
@@ -166,7 +239,7 @@ async function loadBans() {
   list.innerHTML = data.bans.map(b => \`
     <div class="ban-row">
       <span>\${b.ip} \${b.reason ? '- ' + b.reason : ''} <small>(\${b.created_at})</small></span>
-      <button onclick="unban('\${b.ip}')">Unban</button>
+      <button onclick="unban('\${b.ip}')">[unban]</button>
     </div>
   \`).join('') || '<p>No bans</p>';
 }
@@ -210,12 +283,12 @@ export default {
       }
 
       if (url.pathname === "/admin" || url.pathname === "/admin/") {
-        return new Response(ADMIN_HTML, { headers: { "Content-Type": "text/html" } });
+        return new Response(ADMIN_HTML, { headers: { "Content-Type": "text/html", "Cache-Control": "no-store" } });
       }
 
       if (url.pathname === "/admin/submissions") {
         const { results: rows } = await env.DB.prepare(
-          "SELECT id, dataUrl, title, pixelRatio, who, ip, created_at FROM broider_submissions2 ORDER BY id ASC",
+          "SELECT id, dataUrl, title, pixelRatio, who, ip, created_at FROM broider_submissions2 ORDER BY created_at DESC",
         ).all();
         return Response.json({ submissions: rows });
       }

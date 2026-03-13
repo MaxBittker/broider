@@ -21,7 +21,7 @@ let submit = document.getElementById("submit") as HTMLButtonElement;
 let gallery = document.getElementById("gallery") as HTMLDivElement;
 let renderCanvas = document.getElementById("render") as HTMLCanvasElement;
 
-const API_URL = "https://broider-gallery.max-d68.workers.dev/";
+const API_URL = "https://broider-gallery.maxbittker.workers.dev/";
 
 export interface submission {
   dataUrl: string;
